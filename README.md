@@ -3,6 +3,7 @@
 Next.js app for Heartbeat of God Foundation / Heartbeat of God Ministry.
 
 Phase 1 includes the public landing page plus the first HBG Media Command Center dashboard structure.
+Phase 2 adds Supabase-ready forms, schema, and server actions for ministry data intake.
 
 ## Routes
 
@@ -44,6 +45,46 @@ npm run build
 - `public/assets/hbg-logo-reconstructed.svg` - reconstructed HBG logo
 - `public/assets/pastor-amos-cinematic.png` - cinematic Pastor Amos portrait
 - `assets/` - original source assets kept for reference
+
+## Supabase Setup
+
+1. Create a Supabase project.
+2. Open Supabase SQL Editor.
+3. Run `supabase/schema.sql`.
+4. In Supabase project settings, copy:
+   - Project URL
+   - anon public key
+   - service role key
+5. In Vercel project settings, add:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
+The service role key is used only in server actions. Do not expose it publicly.
+
+## Phase 2 Data Tables
+
+- `prayer_requests`
+- `first_timers`
+- `sermons`
+- `clt_drafts`
+- `media_tasks`
+- `weekly_reports`
+
+Current public forms:
+
+- Prayer Request
+- First-Timer Card
+
+Current dashboard forms:
+
+- Sermon Intake
+- CLT Draft
+- Media Task
+- Weekly Report
 
 ## Connect Domain
 

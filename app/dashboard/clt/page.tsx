@@ -1,4 +1,6 @@
 import DashboardHeader from "@/components/DashboardHeader";
+import SubmitForm from "@/components/SubmitForm";
+import { submitCltDraft } from "@/app/actions";
 
 export default function CltPage() {
   return (
@@ -7,15 +9,45 @@ export default function CltPage() {
         Build daily devotionals in HBG-CLT format while preserving Pastor Amos’s tone and Heartbeat of God Ministry’s discipleship rhythm.
       </DashboardHeader>
       <section className="command-panel">
-        <h2>CLT Structure</h2>
-        <div className="checklist">
-          {["HBG-CLT heading", "Date", "Pastor Amos Unogwu", "Title", "Opening scripture", "Key Word", "Word Focus", "Main devotional message", "Reflection", "Prayer / Declaration", "Action Point", "3 quiz questions", "Prayer agenda where relevant"].map((item) => (
-            <label key={item}>
-              <input type="checkbox" />
-              <span>{item}</span>
-            </label>
-          ))}
-        </div>
+        <h2>New CLT Draft</h2>
+        <SubmitForm action={submitCltDraft} submitLabel="Save CLT Draft">
+          <div className="field">
+            <label>Devotional Date</label>
+            <input name="devotional_date" type="date" />
+          </div>
+          <div className="field">
+            <label>Title</label>
+            <input name="title" placeholder="The Consciousness of His Presence" required />
+          </div>
+          <div className="field">
+            <label>Scripture</label>
+            <input name="scripture" placeholder="Psalm 16:11" />
+          </div>
+          <div className="field">
+            <label>Key Word</label>
+            <input name="key_word" placeholder="Presence" />
+          </div>
+          <div className="field span-2">
+            <label>Word Focus</label>
+            <textarea name="word_focus" placeholder="The central burden of today's CLT..." />
+          </div>
+          <div className="field span-2">
+            <label>Main Devotional Message</label>
+            <textarea name="message" placeholder="Write the CLT message..." />
+          </div>
+          <div className="field span-2">
+            <label>Prayer / Declaration</label>
+            <textarea name="prayer" placeholder="I declare..." />
+          </div>
+          <div className="field">
+            <label>Action Point</label>
+            <input name="action_point" placeholder="Pray for 15 minutes..." />
+          </div>
+          <div className="field">
+            <label>Quiz Questions</label>
+            <input name="quiz_questions" placeholder="3 questions separated by semicolons" />
+          </div>
+        </SubmitForm>
       </section>
     </>
   );

@@ -1011,13 +1011,54 @@ footer .wrap {
   grid-column: span 2;
 }
 
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.form-message {
+  margin: 0;
+  font-weight: 800;
+}
+
+.form-message.success {
+  color: #276a55;
+}
+
+.form-message.error {
+  color: #b42318;
+}
+
+.public-form-band {
+  background: var(--paper);
+}
+
+.public-form-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.76fr) minmax(320px, 1fr);
+  gap: clamp(24px, 5vw, 60px);
+  align-items: start;
+}
+
+.public-form-copy {
+  position: sticky;
+  top: 110px;
+}
+
 @media (max-width: 1020px) {
   .section-head,
   .grid-2,
   .grid-3,
   .stat-grid,
-  .tool-grid {
+  .tool-grid,
+  .public-form-layout {
     grid-template-columns: 1fr;
+  }
+
+  .public-form-copy {
+    position: static;
   }
 
   .week {

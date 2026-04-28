@@ -1,0 +1,156 @@
+"use server";
+
+import { createServerSupabase } from "@/lib/supabase/server";
+
+type ActionResult = {
+  ok: boolean;
+  message: string;
+};
+
+function value(formData: FormData, key: string) {
+  const entry = formData.get(key);
+  return typeof entry === "string" ? entry.trim() : "";
+}
+
+function boolValue(formData: FormData, key: string) {
+  return formData.get(key) === "on";
+}
+
+async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
+  const supabase = createServerSupabase();
+
+  if (!supabase) {
+    return {
+      ok: false,
+      message: "Supabase is not configured yet. Add the environment variables in Vercel, then submit again."
+    };
+  }
+
+  const { error } = await supabase.from(table).insert(payload);
+
+  if (error) {
+    return {
+      ok: false,
+      message: error.message
+    };
+  }
+
+  return {
+    ok: true,
+    message: "Saved successfully."
+  };
+}
+
+export async function submitPrayerRequest(_: ActionResult | null, formData: FormData) {
+  const name = value(formData, "name");
+  const request = value(formData, "request");
+
+  if (!name || !request) {
+    return { ok: false, message: "Name and prayer request are required." };
+  }
+
+  return insertRecord("prayer_requests", {
+    name,
+    phone: value(formData, "phone"),
+    email: value(formData, "email"),
+    location: value(formData, "location"),
+    category: value(formData, "category") || "General",
+    request,
+    confidential: boolValue(formData, "confidential"),
+    can_contact: boolValue(formData, "can_contact")
+  });
+}
+
+export async function submitFirstTimer(_: ActionResult | null, formData: FormData) {
+  const name = value(formData, "name");
+
+  if (!name) {
+    return { ok: false, message: "Name is required." };
+  }
+
+  return insertRecord("first_timers", {
+    name,
+    phone: value(formData, "phone"),
+    email: value(formData, "email"),
+    area: value(formData, "area"),
+    invited_by: value(formData, "invited_by"),
+    prayer_need: value(formData, "prayer_need"),
+    visit_type: value(formData, "visit_type") || "first_time"
+  });
+}
+
+export async function submitSermon(_: ActionResult | null, formData: FormData) {
+  const title = value(formData, "title");
+
+  if (!title) {
+    return { ok: false, message: "Sermon title is required." };
+  }
+
+  return insertRecord("sermons", {
+    sermon_date: value(formData, "sermon_date") || null,
+    title,
+    scripture: value(formData, "scripture"),
+    speaker: value(formData, "speaker") || "Pastor Amos Unogwu",
+    main_message: value(formData, "main_message"),
+    key_quotes: value(formData, "key_quotes"),
+    call_to_action: value(formData, "call_to_action"),
+    media_url: value(formData, "media_url")
+  });
+}
+
+export async function submitCltDraft(_: ActionResult | null, formData: FormData) {
+  const title = value(formData, "title");
+
+  if (!title) {
+    return { ok: false, message: "CLT title is required." };
+  }
+
+  return insertRecord("clt_drafts", {
+    devotional_date: value(formData, "devotional_date") || null,
+    title,
+    scripture: value(formData, "scripture"),
+    key_word: value(formData, "key_word"),
+    word_focus: value(formData, "word_focus"),
+    message: value(formData, "message"),
+    prayer: value(formData, "prayer"),
+    action_point: value(formData, "action_point"),
+    quiz_questions: value(formData, "quiz_questions")
+  });
+}
+
+export async function submitMediaTask(_: ActionResult | null, formData: FormData) {
+  const title = value(formData, "title");
+
+  if (!title) {
+    return { ok: false, message: "Task title is required." };
+  }
+
+  return insertRecord("media_tasks", {
+    title,
+    content_type: value(formData, "content_type") || "Sermon Clip",
+    platform: value(formData, "platform") || "WhatsApp",
+    assigned_to: value(formData, "assigned_to"),
+    due_date: value(formData, "due_date") || null,
+    notes: value(formData, "notes")
+  });
+}
+
+export async function submitWeeklyReport(_: ActionResult | null, formData: FormData) {
+  const weekStart = value(formData, "week_start");
+
+  if (!weekStart) {
+    return { ok: false, message: "Week start date is required." };
+  }
+
+  return insertRecord("weekly_reports", {
+    week_start: weekStart,
+    attendance: Number(value(formData, "attendance") || 0),
+    first_timers: Number(value(formData, "first_timers") || 0),
+    souls_won: Number(value(formData, "souls_won") || 0),
+    prayer_requests: Number(value(formData, "prayer_requests") || 0),
+    followups_completed: Number(value(formData, "followups_completed") || 0),
+    clt_posts: Number(value(formData, "clt_posts") || 0),
+    sermon_clips: Number(value(formData, "sermon_clips") || 0),
+    notes: value(formData, "notes")
+  });
+}

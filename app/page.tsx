@@ -1,4 +1,6 @@
 import HeroCanvas from "@/components/HeroCanvas";
+import SubmitForm from "@/components/SubmitForm";
+import { submitFirstTimer, submitPrayerRequest } from "@/app/actions";
 
 const metrics = [
   ["Vision", "Bring men to the sense of God’s divine presence."],
@@ -192,6 +194,97 @@ export default function Home() {
               {["CLT Devotionals", "STIR UP Prayers", "Salvation Challenge", "Sermon Clips", "Worship Reels", "Testimony Videos", "Sunday Invites", "Leadership Training"].map((pillar) => (
                 <span className="pill" key={pillar}>{pillar}</span>
               ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="public-form-band" id="connect">
+          <div className="wrap public-form-layout">
+            <div className="public-form-copy">
+              <div className="eyebrow">Connect With HBG</div>
+              <h2>Prayer, follow-up, and care must never be left to memory.</h2>
+              <p className="lead">
+                These forms are the first Supabase-powered intake points for the HBG growth system. Prayer requests and first-timer records can flow into the Media Command Center for pastoral care and follow-up.
+              </p>
+            </div>
+            <div className="grid-2">
+              <article className="command-panel" style={{ marginTop: 0 }}>
+                <h2>Prayer Request</h2>
+                <p>Share a request for the prayer and care team.</p>
+                <SubmitForm action={submitPrayerRequest} submitLabel="Send Prayer Request">
+                  <div className="field">
+                    <label>Name</label>
+                    <input name="name" placeholder="Your name" required />
+                  </div>
+                  <div className="field">
+                    <label>Phone</label>
+                    <input name="phone" placeholder="+1..." />
+                  </div>
+                  <div className="field">
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="you@example.com" />
+                  </div>
+                  <div className="field">
+                    <label>Category</label>
+                    <select name="category" defaultValue="General">
+                      <option>General</option>
+                      <option>Healing</option>
+                      <option>Family</option>
+                      <option>Work / Business</option>
+                      <option>Salvation</option>
+                      <option>Testimony</option>
+                    </select>
+                  </div>
+                  <div className="field span-2">
+                    <label>Request</label>
+                    <textarea name="request" placeholder="How can we pray with you?" required />
+                  </div>
+                  <label className="span-2">
+                    <input name="can_contact" type="checkbox" defaultChecked /> The team may contact me.
+                  </label>
+                  <label className="span-2">
+                    <input name="confidential" type="checkbox" /> Keep this confidential.
+                  </label>
+                </SubmitForm>
+              </article>
+              <article className="command-panel" style={{ marginTop: 0 }}>
+                <h2>First-Timer Card</h2>
+                <p>Help the follow-up team connect with every visitor.</p>
+                <SubmitForm action={submitFirstTimer} submitLabel="Submit First-Timer Card">
+                  <div className="field">
+                    <label>Name</label>
+                    <input name="name" placeholder="Full name" required />
+                  </div>
+                  <div className="field">
+                    <label>Phone</label>
+                    <input name="phone" placeholder="+234..." />
+                  </div>
+                  <div className="field">
+                    <label>Email</label>
+                    <input name="email" type="email" placeholder="you@example.com" />
+                  </div>
+                  <div className="field">
+                    <label>Area</label>
+                    <input name="area" placeholder="City / area" />
+                  </div>
+                  <div className="field">
+                    <label>Visit Type</label>
+                    <select name="visit_type" defaultValue="first_time">
+                      <option value="first_time">First time</option>
+                      <option value="returning">Returning guest</option>
+                      <option value="new_convert">New convert</option>
+                    </select>
+                  </div>
+                  <div className="field">
+                    <label>Invited By</label>
+                    <input name="invited_by" placeholder="Who invited you?" />
+                  </div>
+                  <div className="field span-2">
+                    <label>Prayer Need</label>
+                    <textarea name="prayer_need" placeholder="Optional prayer need" />
+                  </div>
+                </SubmitForm>
+              </article>
             </div>
           </div>
         </section>
