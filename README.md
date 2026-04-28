@@ -1,23 +1,49 @@
-# Heartbeat of God Foundation Landing Page
+# Heartbeat of God Foundation / HBG Media Command Center
 
-Static Vercel-ready landing page for Heartbeat of God Foundation / Heartbeat of God Ministry.
+Next.js app for Heartbeat of God Foundation / Heartbeat of God Ministry.
 
-## Files
+Phase 1 includes the public landing page plus the first HBG Media Command Center dashboard structure.
 
-- `index.html` - main public landing page
-- `assets/hbg-logo-reconstructed.svg` - reconstructed HBG logo
-- `assets/hbg-logo.png` - original logo reference
-- `assets/pastor-amos-cinematic.png` - cinematic portrait asset
-- `vercel.json` - Vercel static routing and asset cache configuration
+## Routes
+
+- `/` - public HBG Foundation landing page
+- `/dashboard` - Media Command Center overview
+- `/dashboard/sermons` - sermon intake structure
+- `/dashboard/clt` - CLT devotional builder structure
+- `/dashboard/video-studio` - Remotion/video template structure
+- `/dashboard/calendar` - weekly posting rhythm
+- `/dashboard/training` - media worker training academy structure
+- `/dashboard/reports` - weekly reporting structure
+
+## Local Development
+
+```bash
+npm install
+npm run dev
+```
+
+Open `http://localhost:3000`.
+
+## Production Build
+
+```bash
+npm run build
+```
 
 ## Deploy To Vercel
 
 1. Create a new Vercel project.
 2. Import this folder or push it to GitHub and import the repo.
-3. Framework preset: `Other`
-4. Build command: leave empty
-5. Output directory: leave empty or `.`
+3. Framework preset: `Next.js`
+4. Build command: `npm run build`
+5. Output directory: leave as Vercel default.
 6. Deploy.
+
+## Assets
+
+- `public/assets/hbg-logo-reconstructed.svg` - reconstructed HBG logo
+- `public/assets/pastor-amos-cinematic.png` - cinematic Pastor Amos portrait
+- `assets/` - original source assets kept for reference
 
 ## Connect Domain
 
