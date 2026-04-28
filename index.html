@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heartbeat of God Foundation | A Reason to Live</title>
+  <meta name="description" content="Heartbeat of God Ministry media and transformation system: Win Souls, Build Believers, Send Lights through Spirit-filled ministry, discipleship, prayer, evangelism, and digital media.">
+  <style>
+    :root {
+      --night: #06111f;
+      --deep: #0c2543;
+      --blue: #14518a;
+      --sky: #8ec9ff;
+      --gold: #d9aa44;
+      --gold-soft: #f4d88b;
+      --cream: #f7f0e2;
+      --paper: #fffaf0;
+      --white: #ffffff;
+      --ink: #132033;
+      --muted: #607086;
+      --line: rgba(19, 32, 51, 0.14);
+      --shadow: 0 24px 80px rgba(6, 17, 31, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      line-height: 1.55;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .topbar {
+      position: fixed;
+      z-index: 20;
+      inset: 0 0 auto 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 24px;
+      padding: 18px clamp(18px, 5vw, 72px);
+      color: var(--white);
+      background: rgba(6, 17, 31, 0.52);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .brand-mark {
+      width: 72px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.96);
+      border-radius: 9px;
+      box-shadow: 0 10px 26px rgba(6, 17, 31, 0.18);
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+
+    .brand-mark img {
+      width: 66px;
+      height: auto;
+      display: block;
+    }
+
+    .brand span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .nav a:hover {
+      color: var(--gold-soft);
+    }
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        linear-gradient(90deg, rgba(6, 17, 31, 0.96) 0%, rgba(6, 17, 31, 0.8) 44%, rgba(6, 17, 31, 0.42) 100%),
+        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=2600&q=88");
+      background-size: cover;
+      background-position: center;
+      display: grid;
+      align-items: center;
+      padding: 116px clamp(18px, 5vw, 72px) 52px;
+    }
+
+    #hbg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      opacity: 0.86;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 38vh;
+      z-index: 2;
+      background: linear-gradient(rgba(6, 17, 31, 0), var(--night));
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 3;
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero-logo {
+      width: min(310px, 66vw);
+      height: 160px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 14px;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+    }
+
+    .hero-logo img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      color: var(--gold-soft);
+      text-transform: uppercase;
+      font-size: 13px;
+      letter-spacing: 0.12em;
+      font-weight: 900;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 52px;
+      height: 2px;
+      background: var(--gold-soft);
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 1060px;
+      font-size: clamp(44px, 7.8vw, 104px);
+      font-weight: 950;
+    }
+
+    .hero-lead {
+      width: min(760px, 100%);
+      margin: 26px 0 34px;
+      color: rgba(255, 255, 255, 0.84);
+      font-size: clamp(18px, 2.1vw, 24px);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+
+    .btn {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 50px;
+      padding: 13px 18px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 900;
+      position: relative;
+      isolation: isolate;
+      box-shadow: 0 18px 42px rgba(6, 17, 31, 0.22);
+      transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 28px 64px rgba(6, 17, 31, 0.32);
+    }
+
+    .btn::after {
+      content: "";
+      position: absolute;
+      inset: auto 16px -12px;
+      height: 18px;
+      z-index: -1;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.28);
+      filter: blur(14px);
+      opacity: 0.86;
+    }
+
+    .btn-primary {
+      color: #172033;
+      background: var(--gold-soft);
+      box-shadow: 0 18px 44px rgba(217, 170, 68, 0.24);
+    }
+
+    .btn-secondary {
+      color: var(--white);
+      border-color: rgba(255, 255, 255, 0.28);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    }
+
+    .hero-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1px;
+      width: min(1040px, 100%);
+      margin-top: 74px;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+    }
+
+    .metric {
+      padding: 20px;
+      background: rgba(6, 17, 31, 0.62);
+    }
+
+    .metric strong {
+      display: block;
+      color: var(--gold-soft);
+      font-size: 15px;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .metric span {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+    }
+
+    section {
+      padding: clamp(62px, 8vw, 118px) clamp(18px, 5vw, 72px);
+    }
+
+    .dark {
+      background: var(--night);
+      color: var(--white);
+    }
+
+    .deep {
+      background: var(--deep);
+      color: var(--white);
+    }
+
+    .cream {
+      background: var(--cream);
+    }
+
+    .wrap {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.7fr);
+      gap: 36px;
+      align-items: end;
+      margin-bottom: 36px;
+    }
+
+    h2 {
+      color: var(--deep);
+      font-size: clamp(34px, 4.4vw, 62px);
+      font-weight: 950;
+    }
+
+    .dark h2,
+    .deep h2 {
+      color: var(--white);
+    }
+
+    .lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .dark .lead,
+    .deep .lead {
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 18px;
+    }
+
+    .panel {
+      position: relative;
+      overflow: hidden;
+      min-height: 260px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--white);
+      box-shadow: 0 16px 48px rgba(6, 17, 31, 0.07);
+    }
+
+    .panel h3 {
+      color: var(--deep);
+      font-size: 25px;
+      margin-bottom: 12px;
+    }
+
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .dark .panel,
+    .deep .panel {
+      background: rgba(255, 255, 255, 0.07);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: none;
+    }
+
+    .dark .panel h3,
+    .deep .panel h3 {
+      color: var(--gold-soft);
+    }
+
+    .dark .panel p,
+    .deep .panel p,
+    .dark li,
+    .deep li {
+      color: rgba(255, 255, 255, 0.78);
+    }
+
+    .panel-number {
+      position: absolute;
+      right: 20px;
+      bottom: -10px;
+      font-size: 120px;
+      font-weight: 950;
+      line-height: 1;
+      color: rgba(20, 81, 138, 0.08);
+    }
+
+    .deep .panel-number,
+    .dark .panel-number {
+      color: rgba(255, 255, 255, 0.08);
+    }
+
+    .image-band {
+      min-height: 520px;
+      display: grid;
+      align-items: center;
+      background:
+        linear-gradient(90deg, rgba(6, 17, 31, 0.93), rgba(6, 17, 31, 0.44)),
+        url("https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=2400&q=88");
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+    }
+
+    .founder-band {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, #030912 0%, #071526 52%, #030912 100%);
+      color: var(--white);
+    }
+
+    .founder-band::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 80% 35%, rgba(244, 216, 139, 0.2), transparent 28%),
+        radial-gradient(circle at 12% 82%, rgba(142, 201, 255, 0.12), transparent 32%);
+      pointer-events: none;
+    }
+
+    .founder-band::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(112deg, transparent 0 52%, rgba(244, 216, 139, 0.13) 52% 53%, transparent 54%),
+        linear-gradient(72deg, transparent 0 64%, rgba(142, 201, 255, 0.1) 64% 65%, transparent 66%);
+      opacity: 0.8;
+      pointer-events: none;
+    }
+
+    .founder-layout {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: minmax(0, 0.92fr) minmax(340px, 0.72fr);
+      gap: clamp(28px, 5vw, 70px);
+      align-items: center;
+    }
+
+    .founder-content {
+      width: min(720px, 100%);
+    }
+
+    .founder-content h2 {
+      color: var(--white);
+    }
+
+    .founder-content p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 19px;
+      margin: 20px 0 0;
+    }
+
+    .signature-line {
+      display: grid;
+      gap: 4px;
+      margin-top: 28px;
+      color: var(--gold-soft);
+      font-weight: 900;
+    }
+
+    .signature-line span:last-child {
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .portrait-stage {
+      position: relative;
+      min-height: 650px;
+      border-radius: 22px;
+      overflow: visible;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 34px 110px rgba(0, 0, 0, 0.34);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+      transform-style: preserve-3d;
+      perspective: 1200px;
+    }
+
+    .portrait-stage::before {
+      content: "";
+      position: absolute;
+      inset: -28px -28px -36px;
+      z-index: 0;
+      border-radius: 30px;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(244, 216, 139, 0.36), transparent 32%),
+        radial-gradient(circle at 50% 80%, rgba(142, 201, 255, 0.16), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0));
+      filter: blur(2px);
+      pointer-events: none;
+    }
+
+    .portrait-stage::after {
+      content: "";
+      position: absolute;
+      left: 10%;
+      right: 10%;
+      bottom: -34px;
+      height: 72px;
+      z-index: 0;
+      border-radius: 999px;
+      background: radial-gradient(ellipse, rgba(244, 216, 139, 0.38), rgba(0, 0, 0, 0.46) 64%, transparent 74%);
+      filter: blur(12px);
+      transform: rotateX(72deg);
+      pointer-events: none;
+    }
+
+    .portrait-frame {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      border-radius: 22px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(6, 17, 31, 0.02), rgba(6, 17, 31, 0.5)),
+        url("assets/pastor-amos-cinematic.png");
+      background-size: cover;
+      background-position: center top;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18),
+        inset 0 -110px 120px rgba(6, 17, 31, 0.86),
+        0 34px 90px rgba(0, 0, 0, 0.36);
+      transform: translateZ(48px) rotateY(-4deg) rotateX(1deg);
+    }
+
+    .portrait-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 52% 22%, transparent 0 30%, rgba(6, 17, 31, 0.12) 72%);
+      pointer-events: none;
+    }
+
+    .portrait-frame::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mix-blend-mode: screen;
+      opacity: 0.26;
+      pointer-events: none;
+    }
+
+    .portrait-caption {
+      position: absolute;
+      z-index: 4;
+      left: 22px;
+      right: 22px;
+      bottom: 22px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .cinema-plaque {
+      position: absolute;
+      z-index: 5;
+      display: grid;
+      gap: 4px;
+      max-width: 250px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 12px;
+      color: var(--white);
+      background: rgba(6, 17, 31, 0.72);
+      box-shadow: 0 22px 62px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(16px);
+    }
+
+    .cinema-plaque strong {
+      color: var(--gold-soft);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .cinema-plaque span {
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .plaque-top {
+      top: 26px;
+      right: -34px;
+    }
+
+    .plaque-bottom {
+      left: -36px;
+      bottom: 124px;
+    }
+
+    .light-beam {
+      position: absolute;
+      z-index: 1;
+      width: 34%;
+      height: 130%;
+      top: -15%;
+      background: linear-gradient(90deg, transparent, rgba(244, 216, 139, 0.16), transparent);
+      filter: blur(18px);
+      transform: rotate(16deg);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    .beam-one {
+      left: 2%;
+    }
+
+    .beam-two {
+      right: 10%;
+      transform: rotate(-13deg);
+      background: linear-gradient(90deg, transparent, rgba(142, 201, 255, 0.12), transparent);
+    }
+
+    .image-band h2 {
+      color: var(--white);
+      max-width: 860px;
+    }
+
+    .image-band p {
+      max-width: 660px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 20px;
+    }
+
+    .templates {
+      display: grid;
+      gap: 16px;
+    }
+
+    .template {
+      display: grid;
+      grid-template-columns: 76px 1fr minmax(180px, 0.4fr);
+      gap: 18px;
+      align-items: center;
+      padding: 18px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 12px 36px rgba(6, 17, 31, 0.05);
+    }
+
+    .badge {
+      width: 60px;
+      height: 60px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      color: var(--white);
+      font-weight: 950;
+      background: var(--deep);
+    }
+
+    .template h3 {
+      color: var(--deep);
+      font-size: 24px;
+      margin-bottom: 6px;
+    }
+
+    .template p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .template small {
+      color: var(--blue);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .week {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+
+    .day {
+      min-height: 185px;
+      padding: 17px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .day strong {
+      display: block;
+      color: var(--gold-soft);
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 8px;
+    }
+
+    .day span {
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+    }
+
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 14px;
+    }
+
+    .step {
+      position: relative;
+      padding: 22px 22px 22px 76px;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: 0 12px 36px rgba(6, 17, 31, 0.05);
+    }
+
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      position: absolute;
+      top: 20px;
+      left: 22px;
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      color: var(--night);
+      background: var(--gold-soft);
+      border-radius: 8px;
+      font-weight: 950;
+    }
+
+    .step h3 {
+      color: var(--deep);
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .code {
+      overflow: auto;
+      padding: 26px;
+      border-radius: 10px;
+      background: #0a1322;
+      color: #e9eef8;
+      box-shadow: var(--shadow);
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 36px;
+      padding: 8px 13px;
+      color: var(--deep);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .cta {
+      text-align: center;
+      background:
+        linear-gradient(rgba(12, 37, 67, 0.9), rgba(12, 37, 67, 0.9)),
+        url("https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=2400&q=88");
+      background-size: cover;
+      background-position: center;
+      color: var(--white);
+    }
+
+    .cta h2 {
+      color: var(--white);
+      max-width: 900px;
+      margin: 0 auto 18px;
+    }
+
+    .cta p {
+      max-width: 760px;
+      margin: 0 auto 30px;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 19px;
+    }
+
+    footer {
+      padding: 30px clamp(18px, 5vw, 72px);
+      background: #040b14;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 14px;
+    }
+
+    footer .wrap {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 1020px) {
+      .section-head,
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .week {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .template {
+        grid-template-columns: 76px 1fr;
+      }
+
+      .template small {
+        grid-column: 2;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        position: absolute;
+        padding: 14px 18px;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .hero {
+        min-height: 94vh;
+        padding-top: 98px;
+      }
+
+      .founder-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .portrait-stage {
+        min-height: 480px;
+        order: -1;
+        overflow: hidden;
+      }
+
+      .portrait-frame {
+        transform: none;
+      }
+
+      .cinema-plaque {
+        left: 16px;
+        right: 16px;
+        max-width: none;
+      }
+
+      .plaque-top {
+        top: 16px;
+      }
+
+      .plaque-bottom {
+        bottom: 92px;
+      }
+
+      .hero-metrics,
+      .week,
+      .template {
+        grid-template-columns: 1fr;
+      }
+
+      .template small {
+        grid-column: auto;
+      }
+
+      .metric,
+      .panel,
+      .step {
+        padding: 20px;
+      }
+
+      .step {
+        padding-left: 70px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="Heartbeat of God Foundation">
+      <span class="brand-mark"><img src="assets/hbg-logo-reconstructed.svg" alt="HBG logo"></span>
+      <span>Heartbeat of God Foundation</span>
+    </a>
+    <nav class="nav" aria-label="Primary navigation">
+      <a href="#mandate">Mandate</a>
+      <a href="#templates">Media Engine</a>
+      <a href="#workflow">Workflow</a>
+      <a href="#launch">Launch</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="top">
+      <canvas id="hbg-canvas" aria-hidden="true"></canvas>
+      <div class="hero-content">
+        <div class="hero-logo">
+          <img src="assets/hbg-logo-reconstructed.svg" alt="Heartbeat of God Ministry logo">
+        </div>
+        <div class="eyebrow">A Reason to Live</div>
+        <h1>Win Souls. Build Believers. Send Lights.</h1>
+        <p class="hero-lead">
+          Heartbeat of God Ministry is building a digital media engine for the AI era: sermons become discipleship, CLT becomes daily formation, prayer becomes movement, and every recorded moment carries light beyond the room.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#launch">Start the 30-Day Build</a>
+          <a class="btn btn-secondary" href="#templates">See the Media Engine</a>
+        </div>
+        <div class="hero-metrics" aria-label="Heartbeat of God Ministry identity">
+          <div class="metric">
+            <strong>Vision</strong>
+            <span>Bring men to the sense of God’s divine presence.</span>
+          </div>
+          <div class="metric">
+            <strong>Mission</strong>
+            <span>WIN • BUILD • SEND</span>
+          </div>
+          <div class="metric">
+            <strong>Voice</strong>
+            <span>Prophetic, practical, fatherly, and faith-filled.</span>
+          </div>
+          <div class="metric">
+            <strong>Media Law</strong>
+            <span>If it is recorded, it becomes content.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="mandate" class="dark">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The Mandate Is Movement</h2>
+          <p class="lead">
+            Few dedicated workers can carry a large vision when the work is structured, Spirit-led, and multiplied through wise systems.
+          </p>
+        </div>
+        <div class="grid-3">
+          <article class="panel">
+            <span class="panel-number">1</span>
+            <h3>Win</h3>
+            <p>Bring people to Christ through evangelism, Salvation Challenge, altar calls, outreach, testimony, and digital Gospel visibility.</p>
+          </article>
+          <article class="panel">
+            <span class="panel-number">2</span>
+            <h3>Build</h3>
+            <p>Nurture believers through CLT devotionals, prayer, the Word, HLCI teaching, service culture, and Holy Spirit consciousness.</p>
+          </article>
+          <article class="panel">
+            <span class="panel-number">3</span>
+            <h3>Send</h3>
+            <p>Release lights into families, communities, media, business, music, leadership, and digital mission fields across nations.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="image-band">
+      <div class="wrap">
+        <div class="eyebrow">The Heartbeat Way</div>
+        <h2>From this village you will navigate the world.</h2>
+        <p>
+          The way up is down. Waiting is speed. HBG will grow through humility, order, prayer, service, and a media system that keeps the Word moving all week.
+        </p>
+      </div>
+    </section>
+
+    <section class="founder-band" aria-label="Pastor Amos Unogwu media vision">
+      <div class="wrap">
+        <div class="founder-layout">
+          <div class="founder-content">
+            <div class="eyebrow">Visionary Leadership</div>
+            <h2>Pastor Amos Unogwu: a fatherly voice for a generation that must not lose the sense of God’s presence.</h2>
+            <p>
+              Heartbeat of God Ministry carries a prophetic-practical mandate: to raise believers who know Christ, grow strong in the Word, live conscious of the Holy Spirit, serve faithfully, and influence the world with light.
+            </p>
+            <p>
+              The media system exists to preserve that voice, multiply the Word, and make every sermon, CLT devotional, prayer session, worship moment, and testimony travel with purpose.
+            </p>
+            <div class="signature-line">
+              <span>Pastor Amos Unogwu / Doroto Ace</span>
+              <span>Founder, Heartbeat of God Ministry</span>
+            </div>
+          </div>
+          <div class="portrait-stage" aria-label="Cinematic portrait of Pastor Amos Unogwu">
+            <div class="light-beam beam-one"></div>
+            <div class="light-beam beam-two"></div>
+            <div class="portrait-frame"></div>
+            <div class="cinema-plaque plaque-top">
+              <strong>Mandate</strong>
+              <span>Bring men to the sense of God’s divine presence.</span>
+            </div>
+            <div class="cinema-plaque plaque-bottom">
+              <strong>The Heartbeat Way</strong>
+              <span>Win Souls. Build Believers. Send Lights.</span>
+            </div>
+            <div class="portrait-caption">The Word must not end on Sunday. The message must travel.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="templates" class="cream">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>The Custom Remotion Media Engine</h2>
+          <p class="lead">
+            These templates turn ministry moments into fast, branded, repeatable videos for WhatsApp, Instagram, TikTok, Facebook, YouTube, and service screens.
+          </p>
+        </div>
+        <div class="templates">
+          <article class="template">
+            <div class="badge">01</div>
+            <div>
+              <h3>CLT Devotional Video</h3>
+              <p>HBG-CLT heading, date, Pastor Amos Unogwu, title, scripture, Key Word, devotional message, prayer, action point, and quiz prompt.</p>
+            </div>
+            <small>Daily discipleship</small>
+          </article>
+          <article class="template">
+            <div class="badge">02</div>
+            <div>
+              <h3>Sermon Quote Reel</h3>
+              <p>Powerful quote, scripture, sermon title, Pastor Amos lower third, animated captions, and Sunday invitation.</p>
+            </div>
+            <small>Message multiplication</small>
+          </article>
+          <article class="template">
+            <div class="badge">03</div>
+            <div>
+              <h3>Sunday Invitation Video</h3>
+              <p>Theme, service time, venue, prayer expectation, and a warm call to encounter Christ and grow in God’s presence.</p>
+            </div>
+            <small>Weekly gathering</small>
+          </article>
+          <article class="template">
+            <div class="badge">04</div>
+            <div>
+              <h3>STIR UP Prayer Video</h3>
+              <p>Day number, date, scripture, prayer focus, declarations, and the charge: preparing for what God has prepared for us.</p>
+            </div>
+            <small>Prayer momentum</small>
+          </article>
+          <article class="template">
+            <div class="badge">05</div>
+            <div>
+              <h3>Salvation Challenge Promo</h3>
+              <p>Quarterly evangelism conference promos that mobilize believers to win souls and sustain outreach momentum.</p>
+            </div>
+            <small>Evangelism fire</small>
+          </article>
+          <article class="template">
+            <div class="badge">06</div>
+            <div>
+              <h3>Doroto Ace Worship Clip</h3>
+              <p>Music, worship, lyrics, performance clips, and ministry sound packaged for short-form platforms and Gospel reach.</p>
+            </div>
+            <small>Sound and spirit</small>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="workflow" class="deep">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>One Week. One Sermon. Many Lights.</h2>
+          <p class="lead">
+            A weekly rhythm that helps few workers produce consistent, Spirit-conscious content without confusion.
+          </p>
+        </div>
+        <div class="week">
+          <div class="day">
+            <strong>Sunday</strong>
+            <span>Record sermon, worship, testimonies, altar call, first-timers, and clean photos.</span>
+          </div>
+          <div class="day">
+            <strong>Monday</strong>
+            <span>Transcribe, extract scriptures, identify quotes, select clips, and draft CLT.</span>
+          </div>
+          <div class="day">
+            <strong>Tuesday</strong>
+            <span>Export CLT devotional video, sermon quote reel, and prayer declaration.</span>
+          </div>
+          <div class="day">
+            <strong>Wednesday</strong>
+            <span>Post teaching clip, send midweek encouragement, and update archive.</span>
+          </div>
+          <div class="day">
+            <strong>Thursday</strong>
+            <span>Create Sunday invitation, captions, WhatsApp copy, and outreach reminder.</span>
+          </div>
+          <div class="day">
+            <strong>Friday</strong>
+            <span>Publish invitation video, schedule posts, and confirm workers.</span>
+          </div>
+          <div class="day">
+            <strong>Saturday</strong>
+            <span>Post evangelism content, prepare service media, and support outreach.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Build It With Data, Not Stress</h2>
+          <p class="lead">
+            Remotion lets HBG update a simple data brief while the template handles brand, animation, layout, and export size.
+          </p>
+        </div>
+        <pre class="code">{
+  "ministry": "Heartbeat of God Ministry",
+  "slogan": "A Reason to Live",
+  "speaker": "Pastor Amos Unogwu",
+  "title": "The Power of Divine Presence",
+  "scripture": "Psalm 16:11",
+  "keyWord": "Presence",
+  "quote": "A man conscious of God’s presence cannot be stranded.",
+  "cta": "Join us this Sunday",
+  "format": "Vertical Reel",
+  "date": "2026-04-28"
+}</pre>
+        <div class="pill-row" aria-label="HBG content pillars">
+          <span class="pill">CLT Devotionals</span>
+          <span class="pill">STIR UP Prayers</span>
+          <span class="pill">Salvation Challenge</span>
+          <span class="pill">Sermon Clips</span>
+          <span class="pill">Worship Reels</span>
+          <span class="pill">Testimony Videos</span>
+          <span class="pill">Sunday Invites</span>
+          <span class="pill">Leadership Training</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="cream" id="launch">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>30-Day Launch Plan</h2>
+          <p class="lead">
+            Do not start with twenty templates. Start with three that can run every week, then expand.
+          </p>
+        </div>
+        <div class="steps">
+          <article class="step">
+            <h3>Week 1: Foundation</h3>
+            <p>Create the HBG media folder, collect logo/colors/fonts/photos, set up the Remotion project, and build the vertical reel layout.</p>
+          </article>
+          <article class="step">
+            <h3>Week 2: Three Core Templates</h3>
+            <p>Build Sermon Quote Reel, CLT Devotional Reel, and Sunday Invitation Reel. Export the first three public HBG videos.</p>
+          </article>
+          <article class="step">
+            <h3>Week 3: Prayer and Evangelism</h3>
+            <p>Add STIR UP Prayer, Salvation Challenge Promo, and Testimony Reel templates. Train one worker to update data and export.</p>
+          </article>
+          <article class="step">
+            <h3>Week 4: Rhythm and Report</h3>
+            <p>Produce one full content week from one sermon, publish across platforms, and submit the first HBG weekly media report.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2>The Word must not end on Sunday.</h2>
+        <p>
+          Heartbeat of God Ministry will preserve the message, multiply the fire, and send lights through Spirit-filled media, disciplined systems, and faithful workers.
+        </p>
+        <div class="actions" style="justify-content:center">
+          <a class="btn btn-primary" href="#top">Return to the Vision</a>
+          <a class="btn btn-secondary" href="#templates">Review the Templates</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>Heartbeat of God Foundation</span>
+      <span>Win Souls. Build Believers. Send Lights.</span>
+    </div>
+  </footer>
+
+  <script type="module">
+    import * as THREE from "https://unpkg.com/three@0.162.0/build/three.module.js";
+
+    const canvas = document.getElementById("hbg-canvas");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(55, 1, 0.1, 1000);
+    camera.position.set(0, 0, 28);
+
+    const renderer = new THREE.WebGLRenderer({
+      canvas,
+      alpha: true,
+      antialias: true,
+      powerPreference: "high-performance"
+    });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.8));
+
+    const group = new THREE.Group();
+    scene.add(group);
+
+    const gold = new THREE.Color("#f4d88b");
+    const blue = new THREE.Color("#8ec9ff");
+    const white = new THREE.Color("#ffffff");
+
+    const particleCount = 850;
+    const positions = new Float32Array(particleCount * 3);
+    const colors = new Float32Array(particleCount * 3);
+
+    for (let i = 0; i < particleCount; i += 1) {
+      const t = i / particleCount;
+      const angle = t * Math.PI * 2 * 4.6;
+      const radius = 4 + 13 * t;
+      const pulse = Math.sin(t * Math.PI * 10) * 0.8;
+      positions[i * 3] = Math.cos(angle) * radius;
+      positions[i * 3 + 1] = Math.sin(angle) * radius * 0.55 + pulse;
+      positions[i * 3 + 2] = (Math.random() - 0.5) * 14;
+
+      const mix = t < 0.45 ? gold : blue;
+      colors[i * 3] = mix.r;
+      colors[i * 3 + 1] = mix.g;
+      colors[i * 3 + 2] = mix.b;
+    }
+
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+    const material = new THREE.PointsMaterial({
+      size: 0.075,
+      vertexColors: true,
+      transparent: true,
+      opacity: 0.88,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    group.add(particles);
+
+    const ringMaterial = new THREE.MeshBasicMaterial({
+      color: white,
+      transparent: true,
+      opacity: 0.14,
+      wireframe: true
+    });
+
+    const rings = [];
+    for (let i = 0; i < 5; i += 1) {
+      const torus = new THREE.Mesh(
+        new THREE.TorusGeometry(5 + i * 2.3, 0.012, 8, 140),
+        ringMaterial.clone()
+      );
+      torus.rotation.x = Math.PI / 2 + i * 0.12;
+      torus.rotation.y = i * 0.25;
+      torus.material.opacity = 0.09 + i * 0.018;
+      rings.push(torus);
+      group.add(torus);
+    }
+
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: "#f4d88b",
+      transparent: true,
+      opacity: 0.38
+    });
+    const heartPoints = [];
+    for (let i = 0; i < 140; i += 1) {
+      const x = -14 + i * 0.2;
+      const y = Math.sin(i * 0.18) * 0.28 + (i % 28 === 0 ? 1.2 : 0);
+      heartPoints.push(new THREE.Vector3(x, y - 4.5, -2));
+    }
+    const heartLine = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(heartPoints),
+      lineMaterial
+    );
+    group.add(heartLine);
+
+    function resize() {
+      const width = canvas.clientWidth || window.innerWidth;
+      const height = canvas.clientHeight || window.innerHeight;
+      renderer.setSize(width, height, false);
+      camera.aspect = width / height;
+      camera.updateProjectionMatrix();
+      group.position.x = width < 800 ? 3.5 : 8;
+      group.position.y = width < 800 ? -4 : -1;
+      group.scale.setScalar(width < 800 ? 0.72 : 1);
+    }
+
+    window.addEventListener("resize", resize);
+    resize();
+
+    let pointerX = 0;
+    let pointerY = 0;
+    window.addEventListener("pointermove", (event) => {
+      pointerX = (event.clientX / window.innerWidth - 0.5) * 0.8;
+      pointerY = (event.clientY / window.innerHeight - 0.5) * 0.8;
+    });
+
+    function animate(now) {
+      const time = now * 0.001;
+      const breath = 1 + Math.sin(time * 1.8) * 0.025;
+      particles.scale.setScalar(breath);
+      group.rotation.y = time * 0.06 + pointerX * 0.14;
+      group.rotation.x = pointerY * 0.08;
+      heartLine.position.x = Math.sin(time * 1.4) * 0.24;
+      rings.forEach((ring, index) => {
+        ring.rotation.z = time * (0.08 + index * 0.018);
+        ring.scale.setScalar(1 + Math.sin(time * 1.4 + index) * 0.018);
+      });
+      renderer.render(scene, camera);
+      if (!reduceMotion) {
+        requestAnimationFrame(animate);
+      }
+    }
+
+    renderer.render(scene, camera);
+    if (!reduceMotion) {
+      requestAnimationFrame(animate);
+    }
+  </script>
+</body>
+</html>
