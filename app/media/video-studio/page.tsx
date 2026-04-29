@@ -23,6 +23,24 @@ export default function VideoStudioPage() {
         ))}
       </section>
       <section className="command-panel">
+        <h2>Build With Data, Not Stress</h2>
+        <p>
+          Remotion will let HBG update a simple data brief while the template handles brand, animation, layout, and export size. The worker changes the message; the system keeps the look consistent.
+        </p>
+        <pre className="code">{`{
+  "ministry": "Heartbeat of God Ministry",
+  "slogan": "A Reason to Live",
+  "speaker": "Pastor Amos Unogwu",
+  "title": "The Power of Divine Presence",
+  "scripture": "Psalm 16:11",
+  "keyWord": "Presence",
+  "quote": "A man conscious of God’s presence cannot be stranded.",
+  "cta": "Join us this Sunday",
+  "format": "Vertical Reel",
+  "date": "2026-04-28"
+}`}</pre>
+      </section>
+      <section className="command-panel">
         <h2>Create Media Task</h2>
         <p>Assign a video or posting task to the media team. In the next phase, this feeds the approval and publishing queue.</p>
         <SubmitForm action={submitMediaTask} submitLabel="Save Media Task">

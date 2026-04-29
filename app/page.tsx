@@ -10,12 +10,12 @@ const metrics = [
 ];
 
 const templates = [
-  ["01", "CLT Devotional Video", "HBG-CLT heading, date, Pastor Amos Unogwu, title, scripture, Key Word, devotional message, prayer, action point, and quiz prompt.", "Daily discipleship"],
-  ["02", "Sermon Quote Reel", "Powerful quote, scripture, sermon title, Pastor Amos lower third, animated captions, and Sunday invitation.", "Message multiplication"],
-  ["03", "Sunday Invitation Video", "Theme, service time, venue, prayer expectation, and a warm call to encounter Christ and grow in God’s presence.", "Weekly gathering"],
-  ["04", "STIR UP Prayer Video", "Day number, date, scripture, prayer focus, declarations, and the charge: preparing for what God has prepared for us.", "Prayer momentum"],
-  ["05", "Salvation Challenge Promo", "Quarterly evangelism conference promos that mobilize believers to win souls and sustain outreach momentum.", "Evangelism fire"],
-  ["06", "Doroto Ace Worship Clip", "Music, worship, lyrics, performance clips, and ministry sound packaged for short-form platforms and Gospel reach.", "Sound and spirit"]
+  ["01", "CLT Devotionals", "Daily spiritual formation that helps believers come, listen, and take heed to the Word with prayer, reflection, and action.", "Daily discipleship"],
+  ["02", "Sermon Clips", "Short, clear moments from the Word that keep the message alive beyond Sunday and reach people where they already are.", "Message multiplication"],
+  ["03", "Prayer Moments", "Declarations, prayer charges, and STIR UP focuses that awaken faith and keep the church aligned in the Spirit.", "Prayer momentum"],
+  ["04", "Worship Reels", "Worship and Doroto Ace music moments that carry sound, atmosphere, and encouragement into the week.", "Sound and spirit"],
+  ["05", "Testimony Videos", "Stories of God’s faithfulness preserved and shared so others can believe, pray, and return with expectation.", "Witness"],
+  ["06", "Salvation Challenge", "Evangelism-centered media that mobilizes believers to win souls and sustain outreach momentum.", "Evangelism fire"]
 ];
 
 const week = [
@@ -137,8 +137,8 @@ export default function Home() {
         <section id="templates" className="cream">
           <div className="wrap">
             <div className="section-head">
-              <h2>The Custom Remotion Media Engine</h2>
-              <p className="lead">These templates turn ministry moments into fast, branded, repeatable videos for WhatsApp, Instagram, TikTok, Facebook, YouTube, and service screens.</p>
+              <h2>The Message Must Travel</h2>
+              <p className="lead">Every message, prayer, testimony, and worship moment is preserved and shared so more people can encounter Christ and grow in the sense of God’s divine presence.</p>
             </div>
             <div className="templates">
               {templates.map(([number, title, body, label]) => (
@@ -175,24 +175,19 @@ export default function Home() {
         <section>
           <div className="wrap">
             <div className="section-head">
-              <h2>Build It With Data, Not Stress</h2>
-              <p className="lead">Remotion lets HBG update a simple data brief while the template handles brand, animation, layout, and export size.</p>
+              <h2>What The Public Receives</h2>
+              <p className="lead">The internal media system serves a public spiritual purpose: helping people hear the Word, remember the message, pray with focus, and connect with the ministry.</p>
             </div>
-            <pre className="code">{`{
-  "ministry": "Heartbeat of God Ministry",
-  "slogan": "A Reason to Live",
-  "speaker": "Pastor Amos Unogwu",
-  "title": "The Power of Divine Presence",
-  "scripture": "Psalm 16:11",
-  "keyWord": "Presence",
-  "quote": "A man conscious of God’s presence cannot be stranded.",
-  "cta": "Join us this Sunday",
-  "format": "Vertical Reel",
-  "date": "2026-04-28"
-}`}</pre>
-            <div className="pill-row" aria-label="HBG content pillars">
-              {["CLT Devotionals", "STIR UP Prayers", "Salvation Challenge", "Sermon Clips", "Worship Reels", "Testimony Videos", "Sunday Invites", "Leadership Training"].map((pillar) => (
-                <span className="pill" key={pillar}>{pillar}</span>
+            <div className="grid-3">
+              {[
+                ["A Word For The Week", "Sermon clips and CLT devotionals help people carry Sunday’s message into Monday, Tuesday, and beyond."],
+                ["A Place To Respond", "Prayer and first-timer forms make it easy for people to ask for care, follow-up, and spiritual support."],
+                ["A Witness To Share", "Worship, testimony, and outreach media give members simple ways to invite others into what God is doing."]
+              ].map(([title, body]) => (
+                <article className="panel" key={title}>
+                  <h3>{title}</h3>
+                  <p>{body}</p>
+                </article>
               ))}
             </div>
           </div>
