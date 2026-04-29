@@ -54,6 +54,58 @@ function decodeBase64Url(value: string) {
   return Buffer.from(padded, "base64").toString("utf8");
 }
 
+function getSupabaseUrlDiagnostic() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+
+  if (!url) {
+    return "NEXT_PUBLIC_SUPABASE_URL is missing.";
+  }
+
+  try {
+    const host = new URL(url).host;
+    const projectRef = host.endsWith(".supabase.co") ? host.split(".")[0] : "unknown";
+
+    return `NEXT_PUBLIC_SUPABASE_URL host: ${host}, project ref: ${projectRef}.`;
+  } catch {
+    return "NEXT_PUBLIC_SUPABASE_URL is present, but it is not a valid URL.";
+  }
+}
+
+function getJwtKeyDiagnostic(name: string, key: string | undefined) {
+  const trimmedKey = key?.trim();
+
+  if (!trimmedKey) {
+    return `${name} is missing.`;
+  }
+
+  if (trimmedKey.startsWith("sb_secret_")) {
+    return `${name} is a Supabase secret key.`;
+  }
+
+  const parts = trimmedKey.split(".");
+
+  if (parts.length !== 3) {
+    return `${name} is present, but it is not a JWT-style legacy key.`;
+  }
+
+  try {
+    const payload = JSON.parse(decodeBase64Url(parts[1])) as { role?: string; ref?: string };
+    const role = payload.role ?? "unknown";
+    const ref = payload.ref ? `, project ref: ${payload.ref}` : "";
+
+    return `${name} decoded role: ${role}${ref}.`;
+  } catch {
+    return `${name} is present, but its JWT payload could not be decoded.`;
+  }
+}
+
+function getPublicSupabaseDiagnostic() {
+  return `${getSupabaseUrlDiagnostic()} ${getJwtKeyDiagnostic(
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )}`;
+}
+
 function getSupabaseKeyDiagnostic() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
 
@@ -65,21 +117,7 @@ function getSupabaseKeyDiagnostic() {
     return "SUPABASE_SERVICE_ROLE_KEY is a Supabase secret key.";
   }
 
-  const parts = key.split(".");
-
-  if (parts.length !== 3) {
-    return "SUPABASE_SERVICE_ROLE_KEY is present, but it is not a JWT-style legacy key.";
-  }
-
-  try {
-    const payload = JSON.parse(decodeBase64Url(parts[1])) as { role?: string; ref?: string };
-    const role = payload.role ?? "unknown";
-    const ref = payload.ref ? `, project ref: ${payload.ref}` : "";
-
-    return `SUPABASE_SERVICE_ROLE_KEY decoded role: ${role}${ref}.`;
-  } catch {
-    return "SUPABASE_SERVICE_ROLE_KEY is present, but its JWT payload could not be decoded.";
-  }
+  return getJwtKeyDiagnostic("SUPABASE_SERVICE_ROLE_KEY", key);
 }
 
 export async function verifyInternalAccess(_: AccessResult | null, formData: FormData): Promise<AccessResult> {
@@ -105,7 +143,7 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
     if (!supabase) {
       return {
         ok: false,
-        message: "Supabase public intake is not configured correctly yet. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel, then redeploy."
+        message: `Supabase public intake is not configured correctly yet. ${getPublicSupabaseDiagnostic()}`
       };
     }
 
@@ -114,13 +152,13 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
     if (error) {
       return {
         ok: false,
-        message: error.message
+        message: `${error.message} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
     return {
       ok: true,
-      message: "Submitted successfully. Check Admin Intake or Supabase table for the new record."
+      message: `Submitted to the configured Supabase public intake endpoint. If the table you are viewing is still empty, compare this project ref with the Supabase project open in your dashboard. ${getPublicSupabaseDiagnostic()}`
     };
   } catch (error) {
     return {
