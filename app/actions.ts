@@ -75,18 +75,29 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
       };
     }
 
-    const { error } = await supabase.from(table).insert(payload);
+    const { data, error } = await supabase.from(table).insert(payload).select("id").single();
 
     if (error) {
+      const message = error.message.includes("Cannot coerce")
+        ? "Supabase did not return a saved row. Check that SUPABASE_SERVICE_ROLE_KEY is the real service_role key for this Supabase project, then redeploy."
+        : error.message;
+
       return {
         ok: false,
-        message: error.message
+        message
+      };
+    }
+
+    if (!data?.id) {
+      return {
+        ok: false,
+        message: "Supabase accepted the request but no saved row could be verified. Check the service role key and Supabase table connection."
       };
     }
 
     return {
       ok: true,
-      message: "Saved successfully."
+      message: `Saved successfully. Record ID: ${data.id}`
     };
   } catch (error) {
     return {
@@ -281,9 +292,11 @@ export async function loadAdminData(_: AdminDataResult | null, formData: FormDat
       })
     );
 
+    const totalRows = results.reduce((total, [, rows]) => total + rows.length, 0);
+
     return {
       ok: true,
-      message: "Admin data loaded.",
+      message: `Admin data loaded. ${totalRows} records found across all sections.`,
       data: Object.fromEntries(results) as AdminDataset
     };
   } catch (error) {
