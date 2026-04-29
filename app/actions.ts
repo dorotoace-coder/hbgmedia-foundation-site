@@ -48,6 +48,40 @@ function isAdminPasscodeValid(passcode: string) {
   return Boolean(configured && passcode && configured === passcode);
 }
 
+function decodeBase64Url(value: string) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+  return Buffer.from(padded, "base64").toString("utf8");
+}
+
+function getSupabaseKeyDiagnostic() {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+  if (!key) {
+    return "SUPABASE_SERVICE_ROLE_KEY is missing.";
+  }
+
+  if (key.startsWith("sb_secret_")) {
+    return "SUPABASE_SERVICE_ROLE_KEY is a Supabase secret key.";
+  }
+
+  const parts = key.split(".");
+
+  if (parts.length !== 3) {
+    return "SUPABASE_SERVICE_ROLE_KEY is present, but it is not a JWT-style legacy key.";
+  }
+
+  try {
+    const payload = JSON.parse(decodeBase64Url(parts[1])) as { role?: string; ref?: string };
+    const role = payload.role ?? "unknown";
+    const ref = payload.ref ? `, project ref: ${payload.ref}` : "";
+
+    return `SUPABASE_SERVICE_ROLE_KEY decoded role: ${role}${ref}.`;
+  } catch {
+    return "SUPABASE_SERVICE_ROLE_KEY is present, but its JWT payload could not be decoded.";
+  }
+}
+
 export async function verifyInternalAccess(_: AccessResult | null, formData: FormData): Promise<AccessResult> {
   const passcode = value(formData, "passcode");
 
@@ -79,7 +113,7 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
 
     if (error) {
       const message = error.message.includes("Cannot coerce")
-        ? "Supabase did not return a saved row. Check that SUPABASE_SERVICE_ROLE_KEY is the real service_role key for this Supabase project, then redeploy."
+        ? `Supabase did not return a saved row. ${getSupabaseKeyDiagnostic()}`
         : error.message;
 
       return {
@@ -91,7 +125,7 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
     if (!data?.id) {
       return {
         ok: false,
-        message: "Supabase accepted the request but no saved row could be verified. Check the service role key and Supabase table connection."
+        message: `Supabase accepted the request but no saved row could be verified. ${getSupabaseKeyDiagnostic()}`
       };
     }
 
@@ -260,7 +294,7 @@ export async function loadAdminData(_: AdminDataResult | null, formData: FormDat
   if (!supabase) {
     return {
       ok: false,
-      message: "Supabase is not configured correctly. Check Vercel environment variables and redeploy.",
+      message: `Supabase is not configured correctly. ${getSupabaseKeyDiagnostic()}`,
       data: null
     };
   }
@@ -296,7 +330,7 @@ export async function loadAdminData(_: AdminDataResult | null, formData: FormDat
 
     return {
       ok: true,
-      message: `Admin data loaded. ${totalRows} records found across all sections.`,
+      message: `Admin data loaded. ${totalRows} records found across all sections. ${getSupabaseKeyDiagnostic()}`,
       data: Object.fromEntries(results) as AdminDataset
     };
   } catch (error) {
