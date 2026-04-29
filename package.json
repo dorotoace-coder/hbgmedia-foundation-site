@@ -6,10 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "render:sermon": "node scripts/render-sermon-quote.mjs"
   },
   "dependencies": {
+    "@remotion/bundler": "^4.0.454",
     "@remotion/player": "^4.0.454",
+    "@remotion/renderer": "^4.0.454",
     "@supabase/supabase-js": "^2.105.1",
     "next": "latest",
     "react": "latest",

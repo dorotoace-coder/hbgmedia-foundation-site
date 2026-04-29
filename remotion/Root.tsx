@@ -1,0 +1,27 @@
+import { Composition } from "remotion";
+import { SermonQuoteReel } from "../components/remotion/SermonQuoteReel";
+
+export function RemotionRoot() {
+  return (
+    <>
+      <Composition
+        id="SermonQuoteReel"
+        component={SermonQuoteReel}
+        durationInFrames={180}
+        fps={30}
+        width={1080}
+        height={1920}
+        defaultProps={{
+          ministry: "Heartbeat of God Ministry",
+          slogan: "A Reason to Live",
+          speaker: "Pastor Amos Unogwu",
+          title: "The Power of Divine Presence",
+          scripture: "Psalm 16:11",
+          quote: "A man conscious of God’s presence cannot be stranded.",
+          cta: "Join us this Sunday",
+          date: "2026-04-29"
+        }}
+      />
+    </>
+  );
+}

@@ -94,6 +94,18 @@ Admin data access:
 - Visit `/admin`.
 - Enter the passcode to load the latest 25 records from each ministry table.
 
+## Remotion Render
+
+The protected `/media/video-studio` page includes a browser preview for the Sermon Quote Reel.
+
+To render an MP4 locally:
+
+```bash
+npm run render:sermon -- examples/sermon-quote-brief.json renders/hbg-sermon-quote-reel.mp4
+```
+
+The first argument is the JSON data brief. The second argument is the output video path.
+
 ## Connect Domain
 
 In Vercel:

@@ -3,6 +3,7 @@ import {
   Img,
   interpolate,
   spring,
+  staticFile,
   useCurrentFrame,
   useVideoConfig
 } from "remotion";
@@ -93,7 +94,7 @@ export function SermonQuoteReel(props: Partial<SermonQuoteReelProps>) {
             boxShadow: "0 20px 60px rgba(0,0,0,0.26)"
           }}
         >
-          <Img src="/assets/hbg-logo-reconstructed.svg" style={{ width: 142 }} />
+          <Img src={staticFile("assets/hbg-logo-reconstructed.svg")} style={{ width: 142 }} />
         </div>
         <div>
           <div style={{ color: "#f4d88b", fontSize: 28, fontWeight: 900, letterSpacing: 4 }}>

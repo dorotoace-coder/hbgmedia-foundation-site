@@ -43,6 +43,13 @@ export default function VideoStudioPage() {
       </section>
       <SermonQuoteStudio />
       <section className="command-panel">
+        <h2>Export MP4 Locally</h2>
+        <p>
+          Download the data brief from the studio, then render the MP4 from the project folder. Cloud export inside the browser will come later; this local render path is the first working export engine.
+        </p>
+        <pre className="code">{`npm run render:sermon -- examples/sermon-quote-brief.json renders/hbg-sermon-quote-reel.mp4`}</pre>
+      </section>
+      <section className="command-panel">
         <h2>Create Media Task</h2>
         <p>Assign a video or posting task to the media team. In the next phase, this feeds the approval and publishing queue.</p>
         <SubmitForm action={submitMediaTask} submitLabel="Save Media Task">
