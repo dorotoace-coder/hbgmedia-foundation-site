@@ -106,6 +106,19 @@ npm run render:sermon -- examples/sermon-quote-brief.json renders/hbg-sermon-quo
 
 The first argument is the JSON data brief. The second argument is the output video path.
 
+To process the oldest queued render job from Supabase:
+
+```bash
+npm run render:next-job
+```
+
+This requires local environment variables:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL=...
+SUPABASE_SERVICE_ROLE_KEY=...
+```
+
 ## Connect Domain
 
 In Vercel:

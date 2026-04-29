@@ -45,7 +45,7 @@ export default function VideoStudioPage() {
       <section className="command-panel">
         <h2>Export MP4 Locally</h2>
         <p>
-          Download the data brief from the studio, then render the MP4 from the project folder. Cloud export inside the browser will come later; this local render path is the first working export engine.
+          Use Queue Render to save the current brief into Supabase, or download the data brief and render the MP4 from the project folder. Cloud export inside the browser will come later; this local render path is the first working export engine.
         </p>
         <pre className="code">{`npm run render:sermon -- examples/sermon-quote-brief.json renders/hbg-sermon-quote-reel.mp4`}</pre>
       </section>

@@ -14,6 +14,7 @@ export type AdminDataset = {
   clt_drafts: Record<string, unknown>[];
   media_tasks: Record<string, unknown>[];
   weekly_reports: Record<string, unknown>[];
+  render_jobs: Record<string, unknown>[];
 };
 
 export type AdminDataResult =
@@ -189,6 +190,29 @@ export async function submitMediaTask(_: ActionResult | null, formData: FormData
   });
 }
 
+export async function queueRenderJob(_: ActionResult | null, formData: FormData) {
+  const title = value(formData, "title");
+  const inputPropsRaw = value(formData, "input_props");
+
+  if (!title || !inputPropsRaw) {
+    return { ok: false, message: "Title and render data are required." };
+  }
+
+  try {
+    const inputProps = JSON.parse(inputPropsRaw) as Record<string, unknown>;
+
+    return insertRecord("render_jobs", {
+      template: value(formData, "template") || "SermonQuoteReel",
+      title,
+      requested_by: value(formData, "requested_by"),
+      input_props: inputProps,
+      notes: value(formData, "notes")
+    });
+  } catch {
+    return { ok: false, message: "Render data must be valid JSON." };
+  }
+}
+
 export async function submitWeeklyReport(_: ActionResult | null, formData: FormData) {
   const weekStart = value(formData, "week_start");
 
@@ -237,7 +261,8 @@ export async function loadAdminData(_: AdminDataResult | null, formData: FormDat
       "sermons",
       "clt_drafts",
       "media_tasks",
-      "weekly_reports"
+      "weekly_reports",
+      "render_jobs"
     ] as const;
 
     const results = await Promise.all(

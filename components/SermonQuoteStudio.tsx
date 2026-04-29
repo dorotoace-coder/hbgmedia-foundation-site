@@ -1,7 +1,8 @@
 "use client";
 
 import { Player } from "@remotion/player";
-import { useMemo, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
+import { queueRenderJob } from "@/app/actions";
 import { SermonQuoteReel, type SermonQuoteReelProps } from "@/components/remotion/SermonQuoteReel";
 
 const initialData: SermonQuoteReelProps = {
@@ -17,6 +18,7 @@ const initialData: SermonQuoteReelProps = {
 
 export default function SermonQuoteStudio() {
   const [data, setData] = useState(initialData);
+  const [queueState, queueAction, isQueueing] = useActionState(queueRenderJob, null);
   const inputProps = useMemo(() => data, [data]);
 
   function update(key: keyof SermonQuoteReelProps, value: string) {
@@ -69,6 +71,21 @@ export default function SermonQuoteStudio() {
             <button className="btn btn-primary" type="button" onClick={downloadBrief}>
               Download Data Brief
             </button>
+            <form action={queueAction}>
+              <input name="template" type="hidden" value="SermonQuoteReel" />
+              <input name="title" type="hidden" value={data.title} />
+              <input name="requested_by" type="hidden" value="HBG Media Team" />
+              <input name="input_props" type="hidden" value={JSON.stringify(data)} />
+              <input name="notes" type="hidden" value={`Queued from protected Video Studio for ${data.scripture}`} />
+              <button className="btn btn-secondary" type="submit" disabled={isQueueing}>
+                {isQueueing ? "Queueing..." : "Queue Render"}
+              </button>
+            </form>
+            {queueState ? (
+              <p className={queueState.ok ? "form-message success" : "form-message error"}>
+                {queueState.message}
+              </p>
+            ) : null}
           </div>
         </div>
         <div className="remotion-preview">

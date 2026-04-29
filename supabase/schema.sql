@@ -86,12 +86,25 @@ create table if not exists public.weekly_reports (
   notes text
 );
 
+create table if not exists public.render_jobs (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now(),
+  template text not null default 'SermonQuoteReel',
+  title text not null,
+  requested_by text,
+  input_props jsonb not null,
+  output_path text,
+  status text not null default 'queued',
+  notes text
+);
+
 alter table public.prayer_requests enable row level security;
 alter table public.first_timers enable row level security;
 alter table public.sermons enable row level security;
 alter table public.clt_drafts enable row level security;
 alter table public.media_tasks enable row level security;
 alter table public.weekly_reports enable row level security;
+alter table public.render_jobs enable row level security;
 
 -- Public inserts are allowed for website intake forms.
 create policy "Public can submit prayer requests"

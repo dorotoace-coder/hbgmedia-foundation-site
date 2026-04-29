@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "render:sermon": "node scripts/render-sermon-quote.mjs"
+    "render:sermon": "node scripts/render-sermon-quote.mjs",
+    "render:next-job": "node scripts/process-render-job.mjs"
   },
   "dependencies": {
     "@remotion/bundler": "^4.0.454",

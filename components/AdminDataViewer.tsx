@@ -37,6 +37,11 @@ const sections: Array<{
     key: "weekly_reports",
     label: "Weekly Reports",
     fields: ["created_at", "week_start", "attendance", "first_timers", "souls_won", "prayer_requests", "sermon_clips"]
+  },
+  {
+    key: "render_jobs",
+    label: "Render Jobs",
+    fields: ["created_at", "template", "title", "requested_by", "status", "output_path"]
   }
 ];
 
