@@ -85,7 +85,9 @@ export default function SermonQuoteStudio() {
               <p className={queueState.ok ? "form-message success" : "form-message error"}>
                 {queueState.message}
               </p>
-            ) : null}
+            ) : (
+              <p className="form-message">Queue saves this brief into the Render Jobs tab in /admin.</p>
+            )}
           </div>
         </div>
         <div className="remotion-preview">
