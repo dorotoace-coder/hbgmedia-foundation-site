@@ -1,6 +1,6 @@
 "use server";
 
-import { createPublicSupabase, createServerSupabase } from "@/lib/supabase/server";
+import { createServerSupabase } from "@/lib/supabase/server";
 
 type ActionResult = {
   ok: boolean;
@@ -138,27 +138,34 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
   try {
-    const supabase = createPublicSupabase();
+    const supabase = createServerSupabase();
 
     if (!supabase) {
       return {
         ok: false,
-        message: `Supabase public intake is not configured correctly yet. ${getPublicSupabaseDiagnostic()}`
+        message: `Supabase server intake is not configured correctly yet. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
-    const { error } = await supabase.from(table).insert(payload);
+    const { data, error } = await supabase.from(table).insert(payload).select("id").single<{ id: string }>();
 
     if (error) {
       return {
         ok: false,
-        message: `${error.message} ${getPublicSupabaseDiagnostic()}`
+        message: `${error.message} ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+      };
+    }
+
+    if (!data?.id) {
+      return {
+        ok: false,
+        message: `Supabase accepted the request but did not return a saved record ID. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
     return {
       ok: true,
-      message: `Submitted to the configured Supabase public intake endpoint. If the table you are viewing is still empty, compare this project ref with the Supabase project open in your dashboard. ${getPublicSupabaseDiagnostic()}`
+      message: `Saved in Supabase. Table: ${table}. Record ID: ${data.id}.`
     };
   } catch (error) {
     return {
