@@ -1,5 +1,6 @@
 import DashboardHeader from "@/components/DashboardHeader";
 import InternalAccessGate from "@/components/InternalAccessGate";
+import SermonQuoteStudio from "@/components/SermonQuoteStudio";
 import SubmitForm from "@/components/SubmitForm";
 import { submitMediaTask } from "@/app/actions";
 
@@ -40,6 +41,7 @@ export default function VideoStudioPage() {
   "date": "2026-04-28"
 }`}</pre>
       </section>
+      <SermonQuoteStudio />
       <section className="command-panel">
         <h2>Create Media Task</h2>
         <p>Assign a video or posting task to the media team. In the next phase, this feeds the approval and publishing queue.</p>

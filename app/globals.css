@@ -1109,6 +1109,26 @@ footer .wrap {
   max-width: 300px;
 }
 
+.studio-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
+  gap: 24px;
+  align-items: start;
+  margin-top: 20px;
+}
+
+.studio-form {
+  margin-top: 0;
+}
+
+.remotion-preview {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #080f1b;
+  box-shadow: 0 28px 76px rgba(6, 17, 31, 0.18);
+}
+
 .public-form-band {
   background: var(--paper);
 }
@@ -1131,7 +1151,8 @@ footer .wrap {
   .grid-3,
   .stat-grid,
   .tool-grid,
-  .public-form-layout {
+  .public-form-layout,
+  .studio-layout {
     grid-template-columns: 1fr;
   }
 
