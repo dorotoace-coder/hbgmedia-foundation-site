@@ -7,6 +7,27 @@ type ActionResult = {
   message: string;
 };
 
+export type AdminDataset = {
+  prayer_requests: Record<string, unknown>[];
+  first_timers: Record<string, unknown>[];
+  sermons: Record<string, unknown>[];
+  clt_drafts: Record<string, unknown>[];
+  media_tasks: Record<string, unknown>[];
+  weekly_reports: Record<string, unknown>[];
+};
+
+export type AdminDataResult =
+  | {
+      ok: true;
+      message: string;
+      data: AdminDataset;
+    }
+  | {
+      ok: false;
+      message: string;
+      data: null;
+    };
+
 function value(formData: FormData, key: string) {
   const entry = formData.get(key);
   return typeof entry === "string" ? entry.trim() : "";
@@ -14,6 +35,11 @@ function value(formData: FormData, key: string) {
 
 function boolValue(formData: FormData, key: string) {
   return formData.get(key) === "on";
+}
+
+function isAdminPasscodeValid(passcode: string) {
+  const configured = process.env.ADMIN_PASSCODE?.trim();
+  return Boolean(configured && passcode && configured === passcode);
 }
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
@@ -160,4 +186,65 @@ export async function submitWeeklyReport(_: ActionResult | null, formData: FormD
     sermon_clips: Number(value(formData, "sermon_clips") || 0),
     notes: value(formData, "notes")
   });
+}
+
+export async function loadAdminData(_: AdminDataResult | null, formData: FormData): Promise<AdminDataResult> {
+  const passcode = value(formData, "passcode");
+
+  if (!isAdminPasscodeValid(passcode)) {
+    return {
+      ok: false,
+      message: "Invalid admin passcode or ADMIN_PASSCODE is not configured in Vercel.",
+      data: null
+    };
+  }
+
+  const supabase = createServerSupabase();
+
+  if (!supabase) {
+    return {
+      ok: false,
+      message: "Supabase is not configured correctly. Check Vercel environment variables and redeploy.",
+      data: null
+    };
+  }
+
+  try {
+    const tables = [
+      "prayer_requests",
+      "first_timers",
+      "sermons",
+      "clt_drafts",
+      "media_tasks",
+      "weekly_reports"
+    ] as const;
+
+    const results = await Promise.all(
+      tables.map(async (table) => {
+        const { data, error } = await supabase
+          .from(table)
+          .select("*")
+          .order("created_at", { ascending: false })
+          .limit(25);
+
+        if (error) {
+          throw new Error(`${table}: ${error.message}`);
+        }
+
+        return [table, data ?? []] as const;
+      })
+    );
+
+    return {
+      ok: true,
+      message: "Admin data loaded.",
+      data: Object.fromEntries(results) as AdminDataset
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "Could not load admin data.",
+      data: null
+    };
+  }
 }

@@ -6,6 +6,7 @@ const links = [
   ["/dashboard/calendar", "Posting Calendar"],
   ["/dashboard/training", "Training Academy"],
   ["/dashboard/reports", "Reports"],
+  ["/admin", "Admin Intake"],
   ["/", "Public Site"]
 ];
 
