@@ -139,6 +139,7 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
   try {
     const supabase = createServerSupabase();
+    const recordId = crypto.randomUUID();
 
     if (!supabase) {
       return {
@@ -147,7 +148,10 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
       };
     }
 
-    const { data, error } = await supabase.from(table).insert(payload).select("id").single<{ id: string }>();
+    const { error } = await supabase.from(table).insert({
+      id: recordId,
+      ...payload
+    });
 
     if (error) {
       return {
@@ -156,16 +160,29 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
       };
     }
 
-    if (!data?.id) {
+    const { data: savedRecord, error: verifyError } = await supabase
+      .from(table)
+      .select("id")
+      .eq("id", recordId)
+      .maybeSingle<{ id: string }>();
+
+    if (verifyError) {
       return {
         ok: false,
-        message: `Supabase accepted the request but did not return a saved record ID. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+        message: `The record was submitted, but verification failed: ${verifyError.message} ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+      };
+    }
+
+    if (!savedRecord?.id) {
+      return {
+        ok: false,
+        message: `Supabase accepted the request but the saved record could not be found by ID. Expected ID: ${recordId}. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
     return {
       ok: true,
-      message: `Saved in Supabase. Table: ${table}. Record ID: ${data.id}.`
+      message: `Saved in Supabase. Table: ${table}. Record ID: ${savedRecord.id}.`
     };
   } catch (error) {
     return {
