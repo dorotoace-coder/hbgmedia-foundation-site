@@ -117,5 +117,15 @@ on public.first_timers for insert
 to anon
 with check (true);
 
+create policy "Public can queue render jobs"
+on public.render_jobs for insert
+to anon
+with check (true);
+
+create policy "Public can submit media tasks"
+on public.media_tasks for insert
+to anon
+with check (true);
+
 -- Dashboard reads/writes should go through server actions using SUPABASE_SERVICE_ROLE_KEY.
 -- When auth is added, replace service-role dashboard access with authenticated user policies.

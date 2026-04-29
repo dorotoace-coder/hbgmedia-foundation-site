@@ -1,6 +1,6 @@
 "use server";
 
-import { createServerSupabase } from "@/lib/supabase/server";
+import { createPublicSupabase, createServerSupabase } from "@/lib/supabase/server";
 
 type ActionResult = {
   ok: boolean;
@@ -100,38 +100,27 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
   try {
-    const supabase = createServerSupabase();
+    const supabase = createPublicSupabase();
 
     if (!supabase) {
       return {
         ok: false,
-        message: "Supabase is not configured correctly yet. Check the Vercel environment variables and redeploy."
+        message: "Supabase public intake is not configured correctly yet. Check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in Vercel, then redeploy."
       };
     }
 
-    const { data, error } = await supabase.from(table).insert(payload).select("id").single();
+    const { error } = await supabase.from(table).insert(payload);
 
     if (error) {
-      const message = error.message.includes("Cannot coerce")
-        ? `Supabase did not return a saved row. ${getSupabaseKeyDiagnostic()}`
-        : error.message;
-
       return {
         ok: false,
-        message
-      };
-    }
-
-    if (!data?.id) {
-      return {
-        ok: false,
-        message: `Supabase accepted the request but no saved row could be verified. ${getSupabaseKeyDiagnostic()}`
+        message: error.message
       };
     }
 
     return {
       ok: true,
-      message: `Saved successfully. Record ID: ${data.id}`
+      message: "Submitted successfully. Check Admin Intake or Supabase table for the new record."
     };
   } catch (error) {
     return {
