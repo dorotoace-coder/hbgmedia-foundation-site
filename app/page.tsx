@@ -42,7 +42,7 @@ export default function Home() {
           <a href="#mandate">Mandate</a>
           <a href="#templates">Media Engine</a>
           <a href="#workflow">Workflow</a>
-          <a href="/dashboard">Command Center</a>
+          <a href="#connect">Connect</a>
         </nav>
       </header>
 
@@ -59,7 +59,7 @@ export default function Home() {
               Heartbeat of God Ministry is building a digital media engine for the AI era: sermons become discipleship, CLT becomes daily formation, prayer becomes movement, and every recorded moment carries light beyond the room.
             </p>
             <div className="actions">
-              <a className="btn btn-primary" href="/dashboard">Open Command Center</a>
+              <a className="btn btn-primary" href="#connect">Connect With HBG</a>
               <a className="btn btn-secondary" href="#templates">See the Media Engine</a>
             </div>
             <div className="hero-metrics" aria-label="Heartbeat of God Ministry identity">
@@ -316,7 +316,7 @@ export default function Home() {
             <h2>The Word must not end on Sunday.</h2>
             <p>Heartbeat of God Ministry will preserve the message, multiply the fire, and send lights through Spirit-filled media, disciplined systems, and faithful workers.</p>
             <div className="actions" style={{ justifyContent: "center" }}>
-              <a className="btn btn-primary" href="/dashboard">Enter Media Command Center</a>
+              <a className="btn btn-primary" href="#connect">Send Prayer Request</a>
               <a className="btn btn-secondary" href="#templates">Review the Templates</a>
             </div>
           </div>

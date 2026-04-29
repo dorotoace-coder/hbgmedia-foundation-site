@@ -28,6 +28,11 @@ export type AdminDataResult =
       data: null;
     };
 
+export type AccessResult = {
+  ok: boolean;
+  message: string;
+};
+
 function value(formData: FormData, key: string) {
   const entry = formData.get(key);
   return typeof entry === "string" ? entry.trim() : "";
@@ -40,6 +45,22 @@ function boolValue(formData: FormData, key: string) {
 function isAdminPasscodeValid(passcode: string) {
   const configured = process.env.ADMIN_PASSCODE?.trim();
   return Boolean(configured && passcode && configured === passcode);
+}
+
+export async function verifyInternalAccess(_: AccessResult | null, formData: FormData): Promise<AccessResult> {
+  const passcode = value(formData, "passcode");
+
+  if (!isAdminPasscodeValid(passcode)) {
+    return {
+      ok: false,
+      message: "Invalid passcode."
+    };
+  }
+
+  return {
+    ok: true,
+    message: "Access granted."
+  };
 }
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {

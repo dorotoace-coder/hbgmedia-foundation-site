@@ -8,13 +8,13 @@ Phase 2 adds Supabase-ready forms, schema, and server actions for ministry data 
 ## Routes
 
 - `/` - public HBG Foundation landing page
-- `/dashboard` - Media Command Center overview
-- `/dashboard/sermons` - sermon intake structure
-- `/dashboard/clt` - CLT devotional builder structure
-- `/dashboard/video-studio` - Remotion/video template structure
-- `/dashboard/calendar` - weekly posting rhythm
-- `/dashboard/training` - media worker training academy structure
-- `/dashboard/reports` - weekly reporting structure
+- `/media` - passcode-protected Media Command Center overview
+- `/media/sermons` - sermon intake structure
+- `/media/clt` - CLT devotional builder structure
+- `/media/video-studio` - Remotion/video template structure
+- `/media/calendar` - weekly posting rhythm
+- `/media/training` - media worker training academy structure
+- `/media/reports` - weekly reporting structure
 - `/admin` - passcode-protected read-only intake dashboard
 
 ## Local Development

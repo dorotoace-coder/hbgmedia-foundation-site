@@ -1,11 +1,11 @@
 const links = [
-  ["/dashboard", "Overview"],
-  ["/dashboard/sermons", "Sermons"],
-  ["/dashboard/clt", "CLT Builder"],
-  ["/dashboard/video-studio", "Video Studio"],
-  ["/dashboard/calendar", "Posting Calendar"],
-  ["/dashboard/training", "Training Academy"],
-  ["/dashboard/reports", "Reports"],
+  ["/media", "Overview"],
+  ["/media/sermons", "Sermons"],
+  ["/media/clt", "CLT Builder"],
+  ["/media/video-studio", "Video Studio"],
+  ["/media/calendar", "Posting Calendar"],
+  ["/media/training", "Training Academy"],
+  ["/media/reports", "Reports"],
   ["/admin", "Admin Intake"],
   ["/", "Public Site"]
 ];

@@ -11,7 +11,7 @@ export default function AdminPage() {
             A read-only access point for trusted HBG workers to view prayer requests, first-timers, sermons, CLT drafts, media tasks, and weekly reports without logging into Supabase.
           </p>
         </div>
-        <a className="btn btn-primary" href="/dashboard">Command Center</a>
+        <a className="btn btn-primary" href="/media">Media Command Center</a>
       </header>
       <AdminDataViewer />
     </main>
