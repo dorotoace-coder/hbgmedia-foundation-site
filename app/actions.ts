@@ -75,12 +75,19 @@ async function insertRecord(table: string, payload: Record<string, unknown>): Pr
       };
     }
 
-    const { error } = await supabase.from(table).insert(payload);
+    const { data, error } = await supabase.from(table).insert(payload).select("id").single();
 
     if (error) {
       return {
         ok: false,
         message: error.message
+      };
+    }
+
+    if (!data?.id) {
+      return {
+        ok: false,
+        message: "Supabase did not return a saved record. Check that this Vercel project is connected to the right Supabase project."
       };
     }
 
