@@ -120,6 +120,24 @@ function getSupabaseKeyDiagnostic() {
   return getJwtKeyDiagnostic("SUPABASE_SERVICE_ROLE_KEY", key);
 }
 
+function getSupabaseRestConfig() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+
+  if (!url || !serviceRoleKey) {
+    return null;
+  }
+
+  try {
+    return {
+      restUrl: new URL(`/rest/v1/`, url).toString(),
+      serviceRoleKey
+    };
+  } catch {
+    return null;
+  }
+}
+
 export async function verifyInternalAccess(_: AccessResult | null, formData: FormData): Promise<AccessResult> {
   const passcode = value(formData, "passcode");
 
@@ -138,45 +156,56 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
   try {
-    const supabase = createServerSupabase();
+    const supabaseRest = getSupabaseRestConfig();
     const recordId = crypto.randomUUID();
 
-    if (!supabase) {
+    if (!supabaseRest) {
       return {
         ok: false,
         message: `Supabase server intake is not configured correctly yet. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
-    const { error } = await supabase.from(table).insert({
-      id: recordId,
-      ...payload
+    const response = await fetch(`${supabaseRest.restUrl}${table}?select=id`, {
+      method: "POST",
+      headers: {
+        apikey: supabaseRest.serviceRoleKey,
+        Authorization: `Bearer ${supabaseRest.serviceRoleKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation"
+      },
+      body: JSON.stringify({
+        id: recordId,
+        ...payload
+      }),
+      cache: "no-store"
     });
 
-    if (error) {
+    const responseText = await response.text();
+
+    if (!response.ok) {
       return {
         ok: false,
-        message: `${error.message} ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+        message: `Supabase REST insert failed with ${response.status}: ${responseText || response.statusText}. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
-    const { data: savedRecord, error: verifyError } = await supabase
-      .from(table)
-      .select("id")
-      .eq("id", recordId)
-      .maybeSingle<{ id: string }>();
-
-    if (verifyError) {
+    let savedRecords: { id?: string }[];
+    try {
+      savedRecords = JSON.parse(responseText) as { id?: string }[];
+    } catch {
       return {
         ok: false,
-        message: `The record was submitted, but verification failed: ${verifyError.message} ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+        message: `Supabase returned a non-JSON insert response: ${responseText || "empty response"}. Expected ID: ${recordId}. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
+
+    const savedRecord = savedRecords.find((record) => record.id === recordId);
 
     if (!savedRecord?.id) {
       return {
         ok: false,
-        message: `Supabase accepted the request but the saved record could not be found by ID. Expected ID: ${recordId}. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
+        message: `Supabase REST accepted the request but did not return the saved ID. Expected ID: ${recordId}. Response: ${responseText || "empty response"}. ${getSupabaseKeyDiagnostic()} ${getPublicSupabaseDiagnostic()}`
       };
     }
 
