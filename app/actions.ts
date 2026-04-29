@@ -17,28 +17,35 @@ function boolValue(formData: FormData, key: string) {
 }
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
-  const supabase = createServerSupabase();
+  try {
+    const supabase = createServerSupabase();
 
-  if (!supabase) {
+    if (!supabase) {
+      return {
+        ok: false,
+        message: "Supabase is not configured correctly yet. Check the Vercel environment variables and redeploy."
+      };
+    }
+
+    const { error } = await supabase.from(table).insert(payload);
+
+    if (error) {
+      return {
+        ok: false,
+        message: error.message
+      };
+    }
+
+    return {
+      ok: true,
+      message: "Saved successfully."
+    };
+  } catch (error) {
     return {
       ok: false,
-      message: "Supabase is not configured yet. Add the environment variables in Vercel, then submit again."
+      message: error instanceof Error ? error.message : "The form could not be saved. Please try again."
     };
   }
-
-  const { error } = await supabase.from(table).insert(payload);
-
-  if (error) {
-    return {
-      ok: false,
-      message: error.message
-    };
-  }
-
-  return {
-    ok: true,
-    message: "Saved successfully."
-  };
 }
 
 export async function submitPrayerRequest(_: ActionResult | null, formData: FormData) {
