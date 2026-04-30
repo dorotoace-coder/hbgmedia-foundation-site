@@ -1,6 +1,7 @@
 "use server";
 
 import { createServerSupabase } from "@/lib/supabase/server";
+import { put } from "@vercel/blob";
 import {
   deleteInboxRecord,
   intakeTables,
@@ -14,6 +15,22 @@ type ActionResult = {
   ok: boolean;
   message: string;
 };
+
+export type AssetUploadResult =
+  | {
+      ok: true;
+      message: string;
+      assetUrl: string;
+      assetType: string;
+      filename: string;
+    }
+  | {
+      ok: false;
+      message: string;
+      assetUrl?: never;
+      assetType?: never;
+      filename?: never;
+    };
 
 export type AdminDataset = {
   prayer_requests: Record<string, unknown>[];
@@ -49,6 +66,21 @@ function value(formData: FormData, key: string) {
 
 function boolValue(formData: FormData, key: string) {
   return formData.get(key) === "on";
+}
+
+function fileValue(formData: FormData, key: string) {
+  const entry = formData.get(key);
+  return entry instanceof File && entry.size > 0 ? entry : null;
+}
+
+function cleanFilename(name: string) {
+  const clean = name
+    .toLowerCase()
+    .replace(/[^a-z0-9.]+/g, "-")
+    .replace(/(^-|-$)/g, "")
+    .slice(0, 90);
+
+  return clean || "hbg-media-asset";
 }
 
 function isAdminPasscodeValid(passcode: string) {
@@ -230,6 +262,70 @@ export async function deleteInboxRecordAction(formData: FormData): Promise<Acces
     return {
       ok: false,
       message: error instanceof Error ? error.message : "Inbox record could not be deleted."
+    };
+  }
+}
+
+export async function uploadMediaAsset(_: AssetUploadResult | null, formData: FormData): Promise<AssetUploadResult> {
+  const passcode = value(formData, "passcode");
+  const file = fileValue(formData, "asset");
+  const title = value(formData, "title") || "HBG media asset";
+
+  if (!isMediaPasscodeValid(passcode)) {
+    return {
+      ok: false,
+      message: "Invalid media passcode or MEDIA_PASSCODE is not configured in Vercel."
+    };
+  }
+
+  if (!file) {
+    return {
+      ok: false,
+      message: "Choose an image, video, or audio file to upload."
+    };
+  }
+
+  if (!process.env.BLOB_READ_WRITE_TOKEN?.trim()) {
+    return {
+      ok: false,
+      message: "Vercel Blob is not connected yet. Add BLOB_READ_WRITE_TOKEN and redeploy."
+    };
+  }
+
+  const maxSize = 250 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    return {
+      ok: false,
+      message: "This file is larger than 250MB. Upload a shorter clip or compressed version first."
+    };
+  }
+
+  const assetType = file.type || "application/octet-stream";
+  const dateFolder = new Date().toISOString().slice(0, 10);
+  const safeTitle = cleanFilename(title);
+  const safeName = cleanFilename(file.name);
+  const pathname = `hbg-media-assets/${dateFolder}/${safeTitle}-${crypto.randomUUID().slice(0, 8)}-${safeName}`;
+
+  try {
+    const blob = await put(pathname, file, {
+      access: "public",
+      addRandomSuffix: false,
+      contentType: assetType,
+      cacheControlMaxAge: 60 * 60 * 24 * 30
+    });
+
+    return {
+      ok: true,
+      message: `Asset uploaded. Copy this URL into the Video Studio asset field: ${blob.url}`,
+      assetUrl: blob.url,
+      assetType,
+      filename: file.name
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "The media asset could not be uploaded."
     };
   }
 }

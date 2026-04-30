@@ -67,6 +67,23 @@ export default function SermonQuoteStudio() {
             <label>Slogan</label>
             <input value={data.slogan} onChange={(event) => update("slogan", event.target.value)} />
           </div>
+          <div className="field span-2">
+            <label>Asset URL</label>
+            <input
+              value={data.assetUrl ?? ""}
+              onChange={(event) => update("assetUrl", event.target.value)}
+              placeholder="Paste uploaded image/video URL here"
+            />
+          </div>
+          <div className="field span-2">
+            <label>Asset Type</label>
+            <select value={data.assetType ?? ""} onChange={(event) => update("assetType", event.target.value)}>
+              <option value="">No asset</option>
+              <option value="image/png">Image</option>
+              <option value="video/mp4">Video</option>
+              <option value="audio/mpeg">Audio</option>
+            </select>
+          </div>
           <div className="span-2 form-actions">
             <button className="btn btn-primary" type="button" onClick={downloadBrief}>
               Download Data Brief

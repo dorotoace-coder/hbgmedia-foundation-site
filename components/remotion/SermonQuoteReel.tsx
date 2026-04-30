@@ -4,6 +4,7 @@ import {
   interpolate,
   spring,
   staticFile,
+  Video,
   useCurrentFrame,
   useVideoConfig
 } from "remotion";
@@ -17,6 +18,8 @@ export type SermonQuoteReelProps = {
   quote: string;
   cta: string;
   date: string;
+  assetUrl?: string;
+  assetType?: string;
 };
 
 const defaultProps: SermonQuoteReelProps = {
@@ -27,7 +30,9 @@ const defaultProps: SermonQuoteReelProps = {
   scripture: "Psalm 16:11",
   quote: "A man conscious of God’s presence cannot be stranded.",
   cta: "Join us this Sunday",
-  date: "2026-04-29"
+  date: "2026-04-29",
+  assetUrl: "",
+  assetType: ""
 };
 
 export function SermonQuoteReel(props: Partial<SermonQuoteReelProps>) {
@@ -50,6 +55,51 @@ export function SermonQuoteReel(props: Partial<SermonQuoteReelProps>) {
         overflow: "hidden"
       }}
     >
+      {data.assetUrl && data.assetType?.startsWith("image/") ? (
+        <>
+          <Img
+            src={data.assetUrl}
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.36,
+              filter: "saturate(1.05) contrast(1.08)"
+            }}
+          />
+          <AbsoluteFill
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(6,17,31,0.46) 0%, rgba(6,17,31,0.84) 66%, rgba(3,9,18,0.94) 100%)"
+            }}
+          />
+        </>
+      ) : null}
+      {data.assetUrl && data.assetType?.startsWith("video/") ? (
+        <>
+          <Video
+            src={data.assetUrl}
+            muted
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              opacity: 0.24,
+              filter: "saturate(1.05) contrast(1.06)"
+            }}
+          />
+          <AbsoluteFill
+            style={{
+              background:
+                "linear-gradient(180deg, rgba(6,17,31,0.52) 0%, rgba(6,17,31,0.86) 66%, rgba(3,9,18,0.96) 100%)"
+            }}
+          />
+        </>
+      ) : null}
       <AbsoluteFill
         style={{
           backgroundImage:

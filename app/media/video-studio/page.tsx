@@ -1,5 +1,6 @@
 import DashboardHeader from "@/components/DashboardHeader";
 import InternalAccessGate from "@/components/InternalAccessGate";
+import MediaAssetUploader from "@/components/MediaAssetUploader";
 import SermonQuoteStudio from "@/components/SermonQuoteStudio";
 import SubmitForm from "@/components/SubmitForm";
 import { submitMediaTask } from "@/app/actions";
@@ -41,6 +42,7 @@ export default function VideoStudioPage() {
   "date": "2026-04-28"
 }`}</pre>
       </section>
+      <MediaAssetUploader />
       <SermonQuoteStudio />
       <section className="command-panel">
         <h2>Export MP4 Locally</h2>
