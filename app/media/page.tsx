@@ -6,7 +6,7 @@ const stats = [
   ["Priority", "Sermon to CLT"],
   ["Workers", "4 core roles"],
   ["Rhythm", "Sun-Sat"],
-  ["Next Build", "Supabase"],
+  ["Storage", "HBG Inbox"],
   ["Media Law", "Record everything"]
 ];
 
@@ -26,7 +26,7 @@ export default function Dashboard() {
       description="This is a worker-facing space for sermon intake, CLT production, video planning, training, calendar rhythm, and weekly media reports."
     >
       <DashboardHeader eyebrow="Phase 1" title="Media Command Center">
-        The first dashboard structure for HBG workers. This phase creates the rooms; the next phases connect Supabase, Remotion rendering, auto-posting, and worker logins.
+        A protected workspace for HBG workers to organize sermon intake, CLT production, video planning, weekly reporting, and the media rhythm that keeps the Word moving.
       </DashboardHeader>
       <section className="stat-grid" style={{ padding: 0 }}>
         {stats.map(([label, value]) => (
@@ -38,7 +38,7 @@ export default function Dashboard() {
       </section>
       <section className="command-panel">
         <h2>Weekly Command Checklist</h2>
-        <p>Use this as the first manual operating rhythm until the checklist becomes database-powered.</p>
+        <p>Use this as the operating rhythm for a small team producing consistent Spirit-conscious content every week.</p>
         <div className="checklist">
           {[
             "Record Sunday sermon, worship, altar call, and testimonies.",

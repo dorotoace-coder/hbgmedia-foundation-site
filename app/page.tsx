@@ -43,6 +43,7 @@ export default function Home() {
           <a href="#templates">Media Engine</a>
           <a href="#workflow">Workflow</a>
           <a href="#connect">Connect</a>
+          <a href="/admin">Admin</a>
         </nav>
       </header>
 
@@ -199,7 +200,7 @@ export default function Home() {
               <div className="eyebrow">Connect With HBG</div>
               <h2>Prayer, follow-up, and care must never be left to memory.</h2>
               <p className="lead">
-                These forms are the first Supabase-powered intake points for the HBG growth system. Prayer requests and first-timer records can flow into the Media Command Center for pastoral care and follow-up.
+                These forms feed the HBG Intake Inbox so prayer requests and first-timer records can move quickly into pastoral care, follow-up, and media team action.
               </p>
             </div>
             <div className="grid-2">

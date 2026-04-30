@@ -14,7 +14,7 @@ export default function SermonsPage() {
       </DashboardHeader>
       <section className="command-panel">
         <h2>New Sermon Record</h2>
-        <p>This form is static in Phase 1. In Phase 2 it will save to Supabase and feed the CLT and Remotion builders.</p>
+        <p>Save the message details into the HBG Intake Inbox so the same sermon can feed CLT, reels, captions, and follow-up work.</p>
         <SubmitForm action={submitSermon} submitLabel="Save Sermon Intake">
           <div className="field">
             <label>Sermon Date</label>

@@ -14,7 +14,7 @@ export default function VideoStudioPage() {
       description="Protected workspace for planning HBG video templates and assigning media tasks."
     >
       <DashboardHeader eyebrow="Remotion Studio" title="Choose a Template, Feed the Data, Send the Light">
-        Phase 1 defines the video studio structure. Phase 3 will connect these forms to Remotion preview and export.
+        Upload an asset, prepare a clean data brief, preview the branded composition, and keep the render request organized for the media team.
       </DashboardHeader>
       <section className="tool-grid" style={{ padding: 0 }}>
         {templates.map((template) => (
@@ -47,7 +47,7 @@ export default function VideoStudioPage() {
       <section className="command-panel">
         <h2>Export MP4 Locally</h2>
         <p>
-          Use Queue Render to save the current brief into Supabase, or download the data brief and render the MP4 from the project folder. Cloud export inside the browser will come later; this local render path is the first working export engine.
+          Use Queue Render to save the current brief for the media team, or download the data brief and render the MP4 from the project folder. Cloud export inside the browser will come later; this local render path is the first working export engine.
         </p>
         <pre className="code">{`npm run render:sermon -- examples/sermon-quote-brief.json renders/hbg-sermon-quote-reel.mp4`}</pre>
       </section>
