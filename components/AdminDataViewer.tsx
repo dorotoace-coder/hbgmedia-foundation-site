@@ -1,7 +1,14 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
-import { loadAdminData, type AdminDataResult, type AdminDataset } from "@/app/actions";
+import { useActionState, useEffect, useMemo, useState, useTransition } from "react";
+import {
+  deleteInboxRecordAction,
+  loadAdminData,
+  updateInboxStatusAction,
+  type AccessResult,
+  type AdminDataResult,
+  type AdminDataset
+} from "@/app/actions";
 
 const sections: Array<{
   key: keyof AdminDataset;
@@ -57,8 +64,16 @@ function displayValue(value: unknown) {
 export default function AdminDataViewer() {
   const [state, formAction, isPending] = useActionState<AdminDataResult | null, FormData>(loadAdminData, null);
   const [active, setActive] = useState<keyof AdminDataset>("prayer_requests");
+  const [adminPasscode, setAdminPasscode] = useState("");
+  const [workingRecord, setWorkingRecord] = useState("");
+  const [actionMessage, setActionMessage] = useState<AccessResult | null>(null);
+  const [isActionPending, startActionTransition] = useTransition();
   const activeSection = useMemo(() => sections.find((section) => section.key === active) ?? sections[0], [active]);
   const rows = state?.ok ? state.data[active] : [];
+
+  useEffect(() => {
+    setActionMessage(null);
+  }, [active]);
 
   function getVisibleRowsText() {
     const header = activeSection.fields.map((field) => field.replaceAll("_", " ")).join("\t");
@@ -91,6 +106,34 @@ export default function AdminDataViewer() {
     URL.revokeObjectURL(url);
   }
 
+  function runRecordAction(row: Record<string, unknown>, action: "status" | "delete", status?: string) {
+    const inboxPath = typeof row.inbox_path === "string" ? row.inbox_path : "";
+
+    if (!inboxPath) {
+      setActionMessage({
+        ok: false,
+        message: "This record has no HBG Inbox path, so it cannot be edited from this dashboard."
+      });
+      return;
+    }
+
+    const label = String(row.intake_id ?? inboxPath);
+    const formData = new FormData();
+    formData.set("passcode", adminPasscode);
+    formData.set("inbox_path", inboxPath);
+
+    if (status) {
+      formData.set("status", status);
+    }
+
+    setWorkingRecord(label);
+    startActionTransition(async () => {
+      const result = action === "delete" ? await deleteInboxRecordAction(formData) : await updateInboxStatusAction(formData);
+      setActionMessage(result);
+      setWorkingRecord("");
+    });
+  }
+
   return (
     <>
       <section className="command-panel" style={{ marginTop: 0 }}>
@@ -99,7 +142,14 @@ export default function AdminDataViewer() {
         <form action={formAction} className="form-grid">
           <div className="field">
             <label>Admin Passcode</label>
-            <input name="passcode" type="password" placeholder="Enter passcode" required />
+            <input
+              name="passcode"
+              type="password"
+              placeholder="Enter passcode"
+              value={adminPasscode}
+              onChange={(event) => setAdminPasscode(event.target.value)}
+              required
+            />
           </div>
           <div className="form-actions">
             <button className="btn btn-primary" type="submit" disabled={isPending}>
@@ -140,6 +190,11 @@ export default function AdminDataViewer() {
               Print
             </button>
           </div>
+          {actionMessage ? (
+            <p className={actionMessage.ok ? "form-message success" : "form-message error"}>
+              {actionMessage.message}
+            </p>
+          ) : null}
           <div className="admin-table-wrap">
             <table className="admin-table">
               <thead>
@@ -147,6 +202,7 @@ export default function AdminDataViewer() {
                   {activeSection.fields.map((field) => (
                     <th key={field}>{field.replaceAll("_", " ")}</th>
                   ))}
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -156,11 +212,45 @@ export default function AdminDataViewer() {
                       {activeSection.fields.map((field) => (
                         <td key={field}>{displayValue(row[field])}</td>
                       ))}
+                      <td>
+                        <div className="record-actions">
+                          <button
+                            type="button"
+                            onClick={() => runRecordAction(row, "status", "contacted")}
+                            disabled={isActionPending}
+                          >
+                            Contacted
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => runRecordAction(row, "status", "completed")}
+                            disabled={isActionPending}
+                          >
+                            Done
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => runRecordAction(row, "status", "archived")}
+                            disabled={isActionPending}
+                          >
+                            Archive
+                          </button>
+                          <button
+                            className="danger"
+                            type="button"
+                            onClick={() => runRecordAction(row, "delete")}
+                            disabled={isActionPending}
+                          >
+                            Delete
+                          </button>
+                          {workingRecord === String(row.intake_id ?? row.inbox_path) ? <span>Working...</span> : null}
+                        </div>
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={activeSection.fields.length}>No records yet.</td>
+                    <td colSpan={activeSection.fields.length + 1}>No records yet.</td>
                   </tr>
                 )}
               </tbody>

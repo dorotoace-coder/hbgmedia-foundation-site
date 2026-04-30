@@ -1,4 +1,4 @@
-import { get, list, put } from "@vercel/blob";
+import { del, get, list, put } from "@vercel/blob";
 
 export type IntakeTable =
   | "prayer_requests"
@@ -87,7 +87,7 @@ export async function saveInboxRecord(table: IntakeTable, payload: Record<string
   };
 }
 
-async function readInboxRecord(pathname: string) {
+export async function readInboxRecord(pathname: string) {
   const blob = await get(pathname, {
     access: "private",
     useCache: false
@@ -98,6 +98,45 @@ async function readInboxRecord(pathname: string) {
   }
 
   return (await new Response(blob.stream).json()) as IntakeRecord;
+}
+
+export async function updateInboxRecordStatus(pathname: string, status: string) {
+  if (!isInboxConfigured()) {
+    throw new Error("HBG Intake Inbox storage is not connected.");
+  }
+
+  if (!["new", "contacted", "completed", "archived"].includes(status)) {
+    throw new Error("Invalid inbox status.");
+  }
+
+  const existing = await readInboxRecord(pathname);
+
+  if (!existing) {
+    throw new Error("Inbox record was not found.");
+  }
+
+  const updated: IntakeRecord = {
+    ...existing,
+    status,
+    updated_at: new Date().toISOString()
+  };
+
+  await put(pathname, JSON.stringify(updated, null, 2), {
+    access: "private",
+    allowOverwrite: true,
+    contentType: "application/json",
+    cacheControlMaxAge: 60
+  });
+
+  return updated;
+}
+
+export async function deleteInboxRecord(pathname: string) {
+  if (!isInboxConfigured()) {
+    throw new Error("HBG Intake Inbox storage is not connected.");
+  }
+
+  await del(pathname);
 }
 
 export async function loadInboxRecords(table: IntakeTable, limit = 25) {

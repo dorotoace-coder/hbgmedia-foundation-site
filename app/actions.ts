@@ -1,7 +1,14 @@
 "use server";
 
 import { createServerSupabase } from "@/lib/supabase/server";
-import { intakeTables, loadInboxRecords, saveInboxRecord, type IntakeTable } from "@/lib/intake/storage";
+import {
+  deleteInboxRecord,
+  intakeTables,
+  loadInboxRecords,
+  saveInboxRecord,
+  updateInboxRecordStatus,
+  type IntakeTable
+} from "@/lib/intake/storage";
 
 type ActionResult = {
   ok: boolean;
@@ -46,6 +53,11 @@ function boolValue(formData: FormData, key: string) {
 
 function isAdminPasscodeValid(passcode: string) {
   const configured = process.env.ADMIN_PASSCODE?.trim();
+  return Boolean(configured && passcode && configured === passcode);
+}
+
+function isMediaPasscodeValid(passcode: string) {
+  const configured = process.env.MEDIA_PASSCODE?.trim();
   return Boolean(configured && passcode && configured === passcode);
 }
 
@@ -142,10 +154,10 @@ function getSupabaseRestConfig() {
 export async function verifyInternalAccess(_: AccessResult | null, formData: FormData): Promise<AccessResult> {
   const passcode = value(formData, "passcode");
 
-  if (!isAdminPasscodeValid(passcode)) {
+  if (!isMediaPasscodeValid(passcode)) {
     return {
       ok: false,
-      message: "Invalid passcode."
+      message: "Invalid media passcode or MEDIA_PASSCODE is not configured in Vercel."
     };
   }
 
@@ -153,6 +165,73 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
     ok: true,
     message: "Access granted."
   };
+}
+
+export async function updateInboxStatusAction(formData: FormData): Promise<AccessResult> {
+  const passcode = value(formData, "passcode");
+  const path = value(formData, "inbox_path");
+  const status = value(formData, "status");
+
+  if (!isAdminPasscodeValid(passcode)) {
+    return {
+      ok: false,
+      message: "Invalid admin passcode."
+    };
+  }
+
+  if (!path || !status) {
+    return {
+      ok: false,
+      message: "Record path and status are required."
+    };
+  }
+
+  try {
+    await updateInboxRecordStatus(path, status);
+
+    return {
+      ok: true,
+      message: `Inbox record updated to ${status}. Reload admin data to refresh the table.`
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "Inbox record could not be updated."
+    };
+  }
+}
+
+export async function deleteInboxRecordAction(formData: FormData): Promise<AccessResult> {
+  const passcode = value(formData, "passcode");
+  const path = value(formData, "inbox_path");
+
+  if (!isAdminPasscodeValid(passcode)) {
+    return {
+      ok: false,
+      message: "Invalid admin passcode."
+    };
+  }
+
+  if (!path) {
+    return {
+      ok: false,
+      message: "Record path is required."
+    };
+  }
+
+  try {
+    await deleteInboxRecord(path);
+
+    return {
+      ok: true,
+      message: "Inbox record deleted. Reload admin data to refresh the table."
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "Inbox record could not be deleted."
+    };
+  }
 }
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {

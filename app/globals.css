@@ -1164,6 +1164,44 @@ footer .wrap {
   max-width: 300px;
 }
 
+.record-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  min-width: 260px;
+}
+
+.record-actions button {
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--deep);
+  background: rgba(255, 255, 255, 0.9);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.record-actions button.danger {
+  color: var(--royal-red);
+  border-color: rgba(229, 11, 24, 0.28);
+}
+
+.record-actions button:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.record-actions span {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
 .studio-layout {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(260px, 420px);
