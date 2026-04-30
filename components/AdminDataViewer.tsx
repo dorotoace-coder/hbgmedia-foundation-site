@@ -11,37 +11,37 @@ const sections: Array<{
   {
     key: "prayer_requests",
     label: "Prayer Requests",
-    fields: ["created_at", "name", "phone", "category", "request", "confidential", "status"]
+    fields: ["intake_id", "created_at", "name", "phone", "category", "request", "confidential", "status"]
   },
   {
     key: "first_timers",
     label: "First-Timers",
-    fields: ["created_at", "name", "phone", "area", "visit_type", "prayer_need", "status"]
+    fields: ["intake_id", "created_at", "name", "phone", "area", "visit_type", "prayer_need", "status"]
   },
   {
     key: "sermons",
     label: "Sermons",
-    fields: ["created_at", "sermon_date", "title", "scripture", "speaker", "status"]
+    fields: ["intake_id", "created_at", "sermon_date", "title", "scripture", "speaker", "status"]
   },
   {
     key: "clt_drafts",
     label: "CLT Drafts",
-    fields: ["created_at", "devotional_date", "title", "scripture", "key_word", "status"]
+    fields: ["intake_id", "created_at", "devotional_date", "title", "scripture", "key_word", "status"]
   },
   {
     key: "media_tasks",
     label: "Media Tasks",
-    fields: ["created_at", "title", "content_type", "platform", "assigned_to", "due_date", "status"]
+    fields: ["intake_id", "created_at", "title", "content_type", "platform", "assigned_to", "due_date", "status"]
   },
   {
     key: "weekly_reports",
     label: "Weekly Reports",
-    fields: ["created_at", "week_start", "attendance", "first_timers", "souls_won", "prayer_requests", "sermon_clips"]
+    fields: ["intake_id", "created_at", "week_start", "attendance", "first_timers", "souls_won", "prayer_requests", "sermon_clips"]
   },
   {
     key: "render_jobs",
     label: "Render Jobs",
-    fields: ["created_at", "template", "title", "requested_by", "status", "output_path"]
+    fields: ["intake_id", "created_at", "template", "title", "requested_by", "status", "output_path"]
   }
 ];
 
@@ -59,6 +59,37 @@ export default function AdminDataViewer() {
   const [active, setActive] = useState<keyof AdminDataset>("prayer_requests");
   const activeSection = useMemo(() => sections.find((section) => section.key === active) ?? sections[0], [active]);
   const rows = state?.ok ? state.data[active] : [];
+
+  function getVisibleRowsText() {
+    const header = activeSection.fields.map((field) => field.replaceAll("_", " ")).join("\t");
+    const body = rows
+      .map((row) => activeSection.fields.map((field) => displayValue(row[field])).join("\t"))
+      .join("\n");
+
+    return [header, body].filter(Boolean).join("\n");
+  }
+
+  function copyVisibleRows() {
+    void navigator.clipboard.writeText(getVisibleRowsText());
+  }
+
+  function downloadCsv() {
+    const csv = [
+      activeSection.fields.map((field) => `"${field.replaceAll("_", " ")}"`).join(","),
+      ...rows.map((row) =>
+        activeSection.fields
+          .map((field) => `"${displayValue(row[field]).replaceAll('"', '""')}"`)
+          .join(",")
+      )
+    ].join("\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `hbg-${active}-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(url);
+  }
 
   return (
     <>
@@ -97,6 +128,17 @@ export default function AdminDataViewer() {
                 <span>{state.data[section.key].length}</span>
               </button>
             ))}
+          </div>
+          <div className="admin-actions">
+            <button className="btn btn-secondary" type="button" onClick={copyVisibleRows} disabled={!rows.length}>
+              Copy
+            </button>
+            <button className="btn btn-secondary" type="button" onClick={downloadCsv} disabled={!rows.length}>
+              Export CSV
+            </button>
+            <button className="btn btn-secondary" type="button" onClick={() => window.print()} disabled={!rows.length}>
+              Print
+            </button>
           </div>
           <div className="admin-table-wrap">
             <table className="admin-table">

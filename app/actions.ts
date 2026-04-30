@@ -1,6 +1,7 @@
 "use server";
 
 import { createServerSupabase } from "@/lib/supabase/server";
+import { intakeTables, loadInboxRecords, saveInboxRecord, type IntakeTable } from "@/lib/intake/storage";
 
 type ActionResult = {
   ok: boolean;
@@ -155,6 +156,29 @@ export async function verifyInternalAccess(_: AccessResult | null, formData: For
 }
 
 async function insertRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
+  try {
+    const inboxResult = await saveInboxRecord(table as IntakeTable, payload);
+
+    if (!inboxResult.ok) {
+      return {
+        ok: false,
+        message: inboxResult.message
+      };
+    }
+
+    return {
+      ok: true,
+      message: `Captured in HBG Intake Inbox. Intake ID: ${inboxResult.record.intake_id}. Admin can view, copy, print, or export it from the intake dashboard.`
+    };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : "The HBG Intake Inbox could not save this record."
+    };
+  }
+}
+
+async function insertSupabaseRecord(table: string, payload: Record<string, unknown>): Promise<ActionResult> {
   try {
     const supabaseRest = getSupabaseRestConfig();
     const recordId = crypto.randomUUID();
@@ -369,55 +393,74 @@ export async function loadAdminData(_: AdminDataResult | null, formData: FormDat
     };
   }
 
-  const supabase = createServerSupabase();
-
-  if (!supabase) {
-    return {
-      ok: false,
-      message: `Supabase is not configured correctly. ${getSupabaseKeyDiagnostic()}`,
-      data: null
-    };
-  }
-
   try {
-    const tables = [
-      "prayer_requests",
-      "first_timers",
-      "sermons",
-      "clt_drafts",
-      "media_tasks",
-      "weekly_reports",
-      "render_jobs"
-    ] as const;
+    const inboxResults = await Promise.all(
+      intakeTables.map(async (table) => {
+        const result = await loadInboxRecords(table);
 
-    const results = await Promise.all(
-      tables.map(async (table) => {
-        const { data, error } = await supabase
-          .from(table)
-          .select("*")
-          .order("created_at", { ascending: false })
-          .limit(25);
-
-        if (error) {
-          throw new Error(`${table}: ${error.message}`);
+        if (!result.ok) {
+          throw new Error(result.message);
         }
 
-        return [table, data ?? []] as const;
+        return [table, result.records] as const;
       })
     );
 
-    const totalRows = results.reduce((total, [, rows]) => total + rows.length, 0);
+    const totalRows = inboxResults.reduce((total, [, rows]) => total + rows.length, 0);
 
     return {
       ok: true,
-      message: `Admin data loaded. ${totalRows} records found across all sections. ${getSupabaseKeyDiagnostic()}`,
-      data: Object.fromEntries(results) as AdminDataset
+      message: `HBG Intake Inbox loaded. ${totalRows} records found across all sections.`,
+      data: Object.fromEntries(inboxResults) as unknown as AdminDataset
     };
-  } catch (error) {
-    return {
-      ok: false,
-      message: error instanceof Error ? error.message : "Could not load admin data.",
-      data: null
-    };
+  } catch (inboxError) {
+    const supabase = createServerSupabase();
+
+    if (!supabase) {
+      return {
+        ok: false,
+        message:
+          inboxError instanceof Error
+            ? `${inboxError.message} Supabase fallback is also not configured. ${getSupabaseKeyDiagnostic()}`
+            : `HBG Intake Inbox could not load. Supabase fallback is also not configured. ${getSupabaseKeyDiagnostic()}`,
+        data: null
+      };
+    }
+
+    try {
+      const tables = intakeTables;
+
+      const results = await Promise.all(
+        tables.map(async (table) => {
+          const { data, error } = await supabase
+            .from(table)
+            .select("*")
+            .order("created_at", { ascending: false })
+            .limit(25);
+
+          if (error) {
+            throw new Error(`${table}: ${error.message}`);
+          }
+
+          return [table, data ?? []] as const;
+        })
+      );
+
+      const totalRows = results.reduce((total, [, rows]) => total + rows.length, 0);
+
+      return {
+        ok: true,
+        message: `Supabase fallback loaded. ${totalRows} records found across all sections. HBG Inbox note: ${
+          inboxError instanceof Error ? inboxError.message : "Inbox unavailable."
+        } ${getSupabaseKeyDiagnostic()}`,
+        data: Object.fromEntries(results) as AdminDataset
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        message: error instanceof Error ? error.message : "Could not load admin data.",
+        data: null
+      };
+    }
   }
 }

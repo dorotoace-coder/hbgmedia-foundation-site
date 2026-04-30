@@ -1082,6 +1082,22 @@ footer .wrap {
   margin-bottom: 18px;
 }
 
+.admin-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.admin-actions .btn {
+  min-height: 42px;
+  padding: 9px 14px;
+  color: var(--deep);
+  border-color: var(--line);
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 12px 26px rgba(56, 70, 169, 0.14);
+}
+
 .admin-tab {
   display: inline-flex;
   align-items: center;
